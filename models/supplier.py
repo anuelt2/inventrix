@@ -23,3 +23,6 @@ class Supplier(BaseModel, Base):
     products = relationship("Product",
                             backref="supplier",
                             cascade="save-update, merge")
+    transactions = relationship("Transaction",
+                                backref="supplier",
+                                cascade="all, delete, delete-orphan")
