@@ -9,8 +9,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from models.base_model import Base
+from models.category import Category
 
-classes = {}
+
+classes = {
+            'Category': Category
+            }
 
 
 class DBStorage:
