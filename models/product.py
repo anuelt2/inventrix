@@ -1,5 +1,5 @@
 """Defines the Product model for inventrix"""
-from models import BaseModel, Base
+from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Text, Numeric, ForeignKey
 
 

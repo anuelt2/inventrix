@@ -1,5 +1,5 @@
 """Defines the Transaction model for inventrix"""
-from models import BaseModel, Base
+from models.base_model import BaseModel, Base
 from sqlalchemy import (
         Column, Integer, Enum, ForeignKey, Numeric, DateTime, CheckConstraint)
 from sqlalchemy.orm import validates
