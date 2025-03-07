@@ -8,12 +8,16 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from models.base_model import Base
+from models.base_model import BaseModel, Base
 from models.category import Category
+from models.customer import Customer
+from models.supplier import Supplier
 
 
 classes = {
-            'Category': Category
+            'Category': Category,
+            'Customer': Customer,
+            'Supplier': Supplier
             }
 
 
