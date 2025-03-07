@@ -10,6 +10,7 @@ from models.base_model import BaseModel, Base
 class Supplier(BaseModel, Base):
     """Defines Supplier model"""
     __tablename__ = 'suppliers'
+
     name = Column(String(128),
                   unique=True,
                   nullable=False)
