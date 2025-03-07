@@ -1,4 +1,4 @@
-"""Defines the product model for inventrix"""
+"""Defines the Product model for inventrix"""
 from models import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Text, Numeric, ForeignKey
 
@@ -20,4 +20,3 @@ class Product(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initializes products"""
         super().__init__(*args, **kwargs)
-
