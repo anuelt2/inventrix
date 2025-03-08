@@ -1,8 +1,9 @@
+#!/usr/bin/python3
 """Defines the Transaction model for inventrix"""
 from models.base_model import BaseModel, Base
 from sqlalchemy import (
         Column, Integer, Enum, ForeignKey, Numeric, DateTime, CheckConstraint)
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import relationship, validates
 from datetime import datetime
 
 
@@ -15,11 +16,11 @@ class Transaction(BaseModel, Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     supplier_id = Column(Integer, ForeignKey('suppliers.id'), nullable=True)
     customer_id = Column(Integer, ForeignKey('customers.id'), nullable=True)
-    total_amount = Column(
-            Numeric(10, 2), nullable=False, default=0.00, server_default="0.00"
-            )
+    total_amount = Column(Numeric(10, 2), nullable=False, default=0.00)
     transaction_date = Column(
             DateTime, nullable=False, default=datetime.utcnow)
+    transaction_items = relationship(
+        'Transaction_item', backref='transaction', cascade="all, delete")
 
     __table_args__ = (
         CheckConstraint(
@@ -38,8 +39,8 @@ class Transaction(BaseModel, Base):
     @validates('transaction_type', 'customer_id', 'supplier_id')
     def validate_transaction(self, key, value):
         """
-            Ensures that customer_id and supplier_id are used
-            correctly based on transaction_type.
+        Ensures that customer_id and supplier_id are used
+        correctly based on transaction_type.
         """
         if key in ['customer_id', 'supplier_id']:
             transaction_type = self.transaction_type

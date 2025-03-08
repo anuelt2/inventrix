@@ -12,12 +12,16 @@ from models.base_model import BaseModel, Base
 from models.category import Category
 from models.customer import Customer
 from models.supplier import Supplier
+from models.product import Product
+from models.transaction import Transaction
 
 
 classes = {
             'Category': Category,
             'Customer': Customer,
-            'Supplier': Supplier
+            'Supplier': Supplier,
+            'Product': Product,
+            'Transaction': Transaction
             }
 
 
