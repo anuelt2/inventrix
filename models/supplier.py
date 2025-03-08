@@ -9,11 +9,16 @@ from models.base_model import BaseModel, Base
 
 supplier_product = Table("supplier_product", Base.metadata,
                          Column("supplier_id", String(60),
-                                ForeignKey("suppliers.id", ondelete="RESTRICT"),
+                                ForeignKey("suppliers.id",
+                                           ondelete="RESTRICT"),
                                 primary_key=True),
                          Column("product_id", String(60),
-                                ForeignKey("products.id", ondelete="RESTRICT"),
-                                primary_key=True))
+                                ForeignKey("products.id",
+                                           ondelete="RESTRICT"),
+                                primary_key=True),
+                         __table_args__=(UniqueConstraint(
+                             "supplier_id", "product_id",
+                             name="uq_supplier_product")))
 
 
 class Supplier(BaseModel, Base):
