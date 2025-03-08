@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """Defines the Product model for inventrix"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer, Text, Numeric, ForeignKey, Table
+from sqlalchemy import (
+        Column, String, Integer, Text, Numeric, ForeignKey, Table)
 from sqlalchemy.orm import relationship
 
 
@@ -10,6 +11,7 @@ product_supplier = Table(
     Column('product_id', Integer, ForeignKey('products.id')),
     Column('supplier_id', Integer, ForeignKey('suppliers.id'))
 )
+
 
 class Product(BaseModel, Base):
     """Defines the product class attributes"""
