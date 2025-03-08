@@ -21,8 +21,9 @@ class Supplier(BaseModel, Base):
                    unique=True)
     address = Column(String(1024))
     products = relationship("Product",
-                            backref="supplier",
-                            cascade="save-update, merge")
+                            secondary=supplier_product,
+                            backref="suppliers",
+                            cascade="save-update, merge",
+                            passive_deletes=True)
     transactions = relationship("Transaction",
-                                backref="supplier",
-                                cascade="all, delete, delete-orphan")
+                                backref="suppliers)
