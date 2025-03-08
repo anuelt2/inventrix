@@ -1,16 +1,7 @@
 #!/usr/bin/python3
 """Defines the Product model for inventrix"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import (
-        Column, String, Integer, Text, Numeric, ForeignKey, Table)
-from sqlalchemy.orm import relationship
-
-
-product_supplier = Table(
-    'product_supplier', Base.metadata,
-    Column('product_id', String(60), ForeignKey('products.id')),
-    Column('supplier_id', String(60), ForeignKey('suppliers.id'))
-)
+from sqlalchemy import Column, String, Integer, Text, Numeric, ForeignKey
 
 
 class Product(BaseModel, Base):
@@ -25,9 +16,7 @@ class Product(BaseModel, Base):
     stock_quantity = Column(Integer, nullable=False, default=0)
     category_id = Column(String(60), ForeignKey('categories.id'), nullable=False)
     reorder_level = Column(Integer, nullable=False, default=10)
-    supplier_id = Column(String(60), ForeignKey('suppliers.id'), nullable=False)
-    suppliers = relationship(
-        'Supplier', secondary=product_supplier, backref='products')
+    # supplier_id = Column(String(60), ForeignKey('suppliers.id'), nullable=False)
 
     def __init__(self, *args, **kwargs):
         """Initializes products"""
