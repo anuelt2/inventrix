@@ -8,8 +8,8 @@ from sqlalchemy.orm import relationship
 
 product_supplier = Table(
     'product_supplier', Base.metadata,
-    Column('product_id', Integer, ForeignKey('products.id')),
-    Column('supplier_id', Integer, ForeignKey('suppliers.id'))
+    Column('product_id', String(60), ForeignKey('products.id')),
+    Column('supplier_id', String(60), ForeignKey('suppliers.id'))
 )
 
 

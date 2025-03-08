@@ -2,7 +2,7 @@
 """Defines the Transaction model for inventrix"""
 from models.base_model import BaseModel, Base
 from sqlalchemy import (
-        Column, Integer, Enum, ForeignKey, Numeric, DateTime, CheckConstraint)
+        Column, String, Enum, ForeignKey, Numeric, DateTime, CheckConstraint)
 from sqlalchemy.orm import relationship, validates
 from datetime import datetime
 
@@ -13,9 +13,9 @@ class Transaction(BaseModel, Base):
 
     transaction_type = Column(Enum(
         'purchase', 'sale', name='transaction_type_enum'), nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    supplier_id = Column(Integer, ForeignKey('suppliers.id'), nullable=True)
-    customer_id = Column(Integer, ForeignKey('customers.id'), nullable=True)
+    user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+    supplier_id = Column(String(60), ForeignKey('suppliers.id'), nullable=True)
+    customer_id = Column(String(60), ForeignKey('customers.id'), nullable=True)
     total_amount = Column(Numeric(10, 2), nullable=False, default=0.00)
     transaction_date = Column(
             DateTime, nullable=False, default=datetime.utcnow)
