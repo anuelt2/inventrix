@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Contains Supplier model"""
 
-from sqlalchemy import Column, String, Table, ForeignKey
+from sqlalchemy import Column, String, Table, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from models.base_model import BaseModel, Base
@@ -16,9 +16,9 @@ supplier_product = Table("supplier_product", Base.metadata,
                                 ForeignKey("products.id",
                                            ondelete="RESTRICT"),
                                 primary_key=True),
-                         __table_args__=(UniqueConstraint(
-                             "supplier_id", "product_id",
-                             name="uq_supplier_product")))
+                         UniqueConstraint("supplier_id",
+                                          "product_id",
+                                          name="uq_supplier_product"))
 
 
 class Supplier(BaseModel, Base):
