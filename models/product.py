@@ -14,9 +14,10 @@ class Product(BaseModel, Base):
     sku = Column(String(60), unique=True, nullable=False)
     price = Column(Numeric(10, 2), nullable=False)
     stock_quantity = Column(Integer, nullable=False, default=0)
-    category_id = Column(String(60), ForeignKey('categories.id'), nullable=False)
+    category_id = Column(String(60),
+                         ForeignKey('categories.id'),
+                         nullable=False)
     reorder_level = Column(Integer, nullable=False, default=10)
-    # supplier_id = Column(String(60), ForeignKey('suppliers.id'), nullable=False)
 
     def __init__(self, *args, **kwargs):
         """Initializes products"""

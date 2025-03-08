@@ -31,7 +31,7 @@ class User(BaseModel, Base):
                    unique=True,
                    nullable=False)
     password = Column(String(128),
-                           nullable=False)
+                      nullable=False)
     role = Column(Enum(UserRole),
                   default=UserRole.STAFF,
                   nullable=False)
