@@ -21,7 +21,8 @@ classes = {
             'Customer': Customer,
             'Supplier': Supplier,
             'Product': Product,
-            'Transaction': Transaction
+            'Transaction': Transaction,
+            'User': User
             }
 
 
