@@ -1,10 +1,19 @@
 #!/usr/bin/python3
 """Contains Supplier model"""
 
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Table, ForeignKey
 from sqlalchemy.orm import relationship
 
 from models.base_model import BaseModel, Base
+
+
+supplier_product = Table("supplier_product", Base.metadata,
+                         Column("supplier_id", String(60),
+                                ForeignKey("suppliers.id", ondelete="RESTRICT"),
+                                primary_key=True),
+                         Column("product_id", String(60),
+                                ForeignKey("products.id", ondelete="RESTRICT"),
+                                primary_key=True))
 
 
 class Supplier(BaseModel, Base):
@@ -22,8 +31,6 @@ class Supplier(BaseModel, Base):
     address = Column(String(1024))
     products = relationship("Product",
                             secondary=supplier_product,
-                            backref="suppliers",
-                            cascade="save-update, merge",
-                            passive_deletes=True)
+                            backref="suppliers")
     transactions = relationship("Transaction",
-                                backref="suppliers)
+                                backref="supplier")
