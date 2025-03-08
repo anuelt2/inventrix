@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Contains Supplier model"""
 
-from sqlalchemy import Column, String, Table, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, String, Table, ForeignKey
 from sqlalchemy.orm import relationship
 
 from models.base_model import BaseModel, Base
