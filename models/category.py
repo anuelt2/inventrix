@@ -3,6 +3,7 @@
 
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 
 
 class Category(BaseModel, Base):
@@ -14,3 +15,7 @@ class Category(BaseModel, Base):
                   nullable=False)
 
     description = Column(String(1024))
+
+    products = relationship('Product',
+                            backref='category',
+                            cascade='all, delete, delete-orphan')

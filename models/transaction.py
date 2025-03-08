@@ -20,7 +20,7 @@ class Transaction(BaseModel, Base):
     transaction_date = Column(
             DateTime, nullable=False, default=datetime.utcnow)
     transaction_items = relationship(
-        'Transaction_item', backref='transaction', cascade="all, delete")
+        'TransactionItem', backref='transaction', cascade="all, delete")
 
     __table_args__ = (
         CheckConstraint(

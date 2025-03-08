@@ -14,6 +14,8 @@ from models.customer import Customer
 from models.supplier import Supplier
 from models.product import Product
 from models.transaction import Transaction
+from models.user import User
+from models.transaction_item import TransactionItem
 
 
 classes = {
@@ -22,7 +24,8 @@ classes = {
             'Supplier': Supplier,
             'Product': Product,
             'Transaction': Transaction,
-            'User': User
+            'User': User,
+            'TransactionItem': TransactionItem
             }
 
 
