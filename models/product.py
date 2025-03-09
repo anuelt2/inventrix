@@ -1,12 +1,16 @@
 #!/usr/bin/python3
 """Defines the Product model for inventrix"""
-from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Text, Numeric, ForeignKey
+from sqlalchemy.orm import relationship
+
+from models.base_model import BaseModel, Base
+from models.supplier import supplier_product
 
 
 class Product(BaseModel, Base):
     """Defines the product class attributes"""
     __tablename__ = 'products'
+
     name = Column(String(128), unique=True, nullable=False)
     brand = Column(String(128), nullable=True)
     model = Column(String(128), nullable=True)
@@ -18,6 +22,9 @@ class Product(BaseModel, Base):
                          ForeignKey('categories.id'),
                          nullable=False)
     reorder_level = Column(Integer, nullable=False, default=10)
+    suppliers = relationship("Supplier",
+                             secondary=supplier_product,
+                             back_populates="products")
 
     def __init__(self, *args, **kwargs):
         """Initializes products"""
