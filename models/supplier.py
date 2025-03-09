@@ -36,6 +36,6 @@ class Supplier(BaseModel, Base):
     address = Column(String(1024))
     products = relationship("Product",
                             secondary=supplier_product,
-                            backref="suppliers")
+                            back_populates="suppliers")
     transactions = relationship("Transaction",
                                 backref="supplier")
