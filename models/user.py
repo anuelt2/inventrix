@@ -30,7 +30,7 @@ class User(BaseModel, Base):
     email = Column(String(128),
                    unique=True,
                    nullable=False)
-    password = Column(String(128),
+    password = Column(String(255),
                       nullable=False)
     role = Column(Enum(UserRole),
                   default=UserRole.STAFF,
