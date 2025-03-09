@@ -24,3 +24,5 @@ class TransactionItem(BaseModel, Base):
     product_id = Column(String(60),
                         ForeignKey('products.id'),
                         nullable=False)
+    
+    product = relationship('Product', backref='transaction_items')
