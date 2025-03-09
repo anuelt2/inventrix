@@ -39,7 +39,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES ('Drywall & Acoustical (MOB)','Horizontal content-based orchestration','0281c6c0-356f-48b0-833d-1eed161c0c0d','2024-08-07 20:21:17','2024-11-15 05:52:45'),('Fire Sprinkler System','De-engineered intermediate encryption','05dde1e0-59cd-43f7-886d-ab5b75b9685f','2024-06-16 08:00:20','2024-03-26 00:01:07'),('Ornamental Railings','Profit-focused non-volatile analyzer','0b890b91-6e39-4abd-b039-379502509c3c','2025-01-15 12:10:30','2024-07-04 05:30:50'),('Epoxy Flooring','Front-line 5th generation complexity','1169a0bf-2ad3-492f-8c22-5e068579b241','2025-02-16 12:09:55','2024-11-05 01:32:18'),('Drywall & Acoustical (FED)','Innovative system-worthy solution','7317db2d-ac5f-4b30-9d46-765587af9d60','2024-09-22 06:03:52','2024-07-31 07:00:18'),('Masonry','Polarised even-keeled instruction set','9490485f-a86e-4fbd-8b2f-ccec0e44aacf','2025-02-14 15:50:44','2024-04-05 19:42:31'),('Roofing (Metal)','Optional local service-desk','a696d336-d3ad-437d-913c-4940df152a3a','2024-03-11 00:58:37','2024-04-26 09:53:15'),('Curb & Gutter','Automated intangible matrices','d9d32275-c6d4-48ee-bb9d-c1433c286fcc','2024-04-05 23:42:23','2024-04-21 07:27:16'),('Wall Protection','Organized directional conglomeration','dc8f4ab9-2051-4c5f-8070-e6a1b1b5f3b6','2024-10-09 23:06:45','2024-10-14 00:40:23'),('Prefabricated Aluminum Metal Canopies','Balanced 24/7 matrix','df6ae42a-43f7-4e0c-ae9c-df5c38da9d7c','2024-10-12 09:02:38','2025-01-05 10:33:47');
+INSERT INTO `categories` VALUES ('Drywall & Acoustical (MOB)','Horizontal content-based orchestration','0281c6c0-356f-48b0-833d-1eed161c0c0d','2024-08-07 20:21:17','2024-11-15 05:52:45'),('Fire Sprinkler System','De-engineered intermediate encryption','05dde1e0-59cd-43f7-886d-ab5b75b9685f','2024-06-16 08:00:20','2024-03-26 00:01:07'),('Ornamental Railings','Profit-focused non-volatile analyzer','0b890b91-6e39-4abd-b039-379502509c3c','2025-01-15 12:10:30','2024-07-04 05:30:50'),('Epoxy Flooring','Front-line 5th generation complexity','1169a0bf-2ad3-492f-8c22-5e068579b241','2025-02-16 12:09:55','2024-11-05 01:32:18'),('Drywall & Acoustical (FED)','Innovative system-worthy solution','7317db2d-ac5f-4b30-9d46-765587af9d60','2024-09-22 06:03:52','2024-07-31 07:00:18'),('Masonry','Polarised even-keeled instruction set','9490485f-a86e-4fbd-8b2f-ccec0e44aacf','2025-02-14 15:50:44','2024-04-05 19:42:31'),('Books','A category of books','a466723a-4889-4915-8707-75ad2e962c14','2025-03-09 15:26:45','2025-03-09 15:26:45'),('Roofing (Metal)','Optional local service-desk','a696d336-d3ad-437d-913c-4940df152a3a','2024-03-11 00:58:37','2024-04-26 09:53:15'),('Curb & Gutter','Automated intangible matrices','d9d32275-c6d4-48ee-bb9d-c1433c286fcc','2024-04-05 23:42:23','2024-04-21 07:27:16'),('Wall Protection','Organized directional conglomeration','dc8f4ab9-2051-4c5f-8070-e6a1b1b5f3b6','2024-10-09 23:06:45','2024-10-14 00:40:23'),('Prefabricated Aluminum Metal Canopies','Balanced 24/7 matrix','df6ae42a-43f7-4e0c-ae9c-df5c38da9d7c','2024-10-12 09:02:38','2025-01-05 10:33:47');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,7 +228,8 @@ CREATE TABLE `transactions` (
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `transactions_ibfk_2` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`),
-  CONSTRAINT `transactions_ibfk_3` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
+  CONSTRAINT `transactions_ibfk_3` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
+  CONSTRAINT `check_transaction_type` CHECK ((((`transaction_type` = _utf8mb4'sale') and (`customer_id` is not null) and (`supplier_id` is null)) or ((`transaction_type` = _utf8mb4'purchase') and (`supplier_id` is not null) and (`customer_id` is null))))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -254,7 +255,7 @@ CREATE TABLE `users` (
   `last_name` varchar(128) NOT NULL,
   `username` varchar(60) NOT NULL,
   `email` varchar(128) NOT NULL,
-  `password` varchar(128) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `role` enum('SUPERUSER','ADMIN','STAFF') NOT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `id` varchar(60) NOT NULL,
@@ -285,4 +286,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-09 13:39:55
+-- Dump completed on 2025-03-09 17:32:32
