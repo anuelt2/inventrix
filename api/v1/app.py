@@ -2,7 +2,7 @@
 """Flask Application"""
 from os import getenv
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response
 
 from models import storage
 from api.v1.views import app_views
@@ -24,8 +24,14 @@ def close_storage(exceptions=None):
 @app.errorhandler(404)
 def not_found(error):
     """404 Error"""
-    return jsonify({"error": "Not found"}), 404
+    response = make_response(jsonify({"error": error.description}), 404)
+    return response
 
+@app.errorhandler(400)
+def bad_request(error):
+    """400 error"""
+    response = make_response(jsonify({"error": error.description}), 400)
+    return response
 
 if __name__ == "__main__":
     app.run(
