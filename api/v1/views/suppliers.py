@@ -11,7 +11,7 @@ from models.supplier import Supplier
 def get_suppliers():
     """Retrieves list of all Supplier objects"""
     all_suppliers = storage.all(Supplier).values()
-    return jsonify([supplier.to_dict for supplier in all_suppliers])
+    return jsonify([supplier.to_dict() for supplier in all_suppliers])
 
 
 @app_views.route("/suppliers/<supplier_id>", methods=['GET'])
@@ -20,7 +20,7 @@ def get_supplier(supplier_id):
     supplier = storage.get(Supplier, supplier_id)
     if not supplier:
         abort(404)
-    return jsonify(supplier.to_dict)
+    return jsonify(supplier.to_dict())
 
 
 @app_views.route("/suppliers", methods=['POST'])
@@ -35,7 +35,7 @@ def post_supplier():
         abort(400, description="Missing phone")
     new_supplier = Supplier(**data)
     new_supplier.save()
-    return jsonify(instance.to_dict()), 201
+    return jsonify(new_supplier.to_dict()), 201
 
 
 @app_views.route("/suppliers/<supplier_id>", methods=['PUT'])
