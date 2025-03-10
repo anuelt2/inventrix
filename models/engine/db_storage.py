@@ -112,3 +112,18 @@ class DBStorage:
             count = len(self.all(cls).values())
 
         return count
+
+    def get_by_attr(self, cls, key, value):
+        """
+        Retrieve object(s) of cls with attribute matching key: value
+
+        Parameters:
+            cls (class): Model to query
+            key (str): Attribute to filter by
+            value (str): Value of @key
+
+        Returns: A list of all object(s) that fit the criteria
+        """
+
+        query = self.__session.query(cls).filter_by(**{key: value}).all()
+        return query
