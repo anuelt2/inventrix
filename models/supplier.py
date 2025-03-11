@@ -30,9 +30,11 @@ class Supplier(BaseModel, Base):
                   nullable=False)
     contact_person = Column(String(128))
     phone = Column(String(60),
+                   unique=True,
                    nullable=False)
     email = Column(String(60),
-                   unique=True)
+                   unique=True,
+                   nullable=False)
     address = Column(String(1024))
     products = relationship("Product",
                             secondary=supplier_product,

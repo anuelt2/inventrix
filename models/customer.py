@@ -12,10 +12,8 @@ class Customer(BaseModel, Base):
     __tablename__ = 'customers'
 
     name = Column(String(128))
-    phone = Column(String(20),
-                   unique=True)
-    email = Column(String(60),
-                   unique=True)
+    phone = Column(String(20))
+    email = Column(String(60))
     address = Column(String(1024))
     transactions = relationship("Transaction",
                                 backref="customer",
