@@ -113,7 +113,7 @@ def put_transaction(transaction_id):
     if data is None:
         abort(400, "Not a JSON")
 
-    # Skip immutable data
+    # Skip data
     skip = ['id', 'user_id', 'created_at', 'updated_at']
 
     # Set attributes and validate transaction by transaction type

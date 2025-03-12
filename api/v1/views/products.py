@@ -77,14 +77,14 @@ def post_product():
         abort(404)
 
     # Check if product name already exit
-    it_exists = storage.get_by_attr(Product, 'name', data['name'])
+    it_exists = storage.get_by_attr(Product, name=data['name'])
     if it_exists:
         return make_response(jsonify({"error": "Already exists"}), 409)
 
     product = Product(**data)
 
     # Generate a unique sku
-    product.sku = valid_category.name + '-' + product.name
+    product.sku = generate_sku(product, valid_category.name)
     product.save()
     return make_response(jsonify(product.to_dict()), 201)
 
@@ -100,14 +100,35 @@ def put_product(product_id):
     if data is None:
         abort(400, "Not a JSON")
 
-    # Skip immutable data
+    # Skip data
     skip = [
         'id', 'name', 'sku',
-        'category_id', 'created_at', 'updated_at'
+        'created_at', 'updated_at'
         ]
     for key, value in data.items():
         if key not in skip:
             setattr(product, key, value)
 
+    # Validate product category
+    valid_category = storage.get(Category, product.category_id)
+    if not valid_category:
+        abort(404)
+
+    product.sku = generate_sku(product, valid_category.name)
     product.save()
     return make_response(jsonify(product.to_dict()), 200)
+
+
+def generate_sku(product, category_name):
+    """Generate SKU for product"""
+    category = category_name[:3].upper().replace(" ", "")
+    brand = product.brand[:3].upper().replace(" ", "")
+    brand = brand if brand else 'GEN'
+
+    model = product.model[:5].upper().replace(" ", "")
+    model = model if model else 'GEN'
+
+    product_id = product.id[:4]
+
+    sku = f"{category}-{brand}-{model}-{product_id}"
+    return sku
