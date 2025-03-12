@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """Implement RESTFul APIs for Transaction object"""
 from flask import jsonify, abort, make_response, request
-from api.v1.views import app_views
 
+from api.v1.views import app_views
 from models import storage
 from models.transaction import Transaction
 from models.user import User
@@ -13,13 +13,32 @@ from models.supplier import Supplier
 @app_views.route('/transactions', methods=['GET'])
 def get_transactions():
     """Retrieve the list of all transactions"""
-    transactions = storage.all(Transaction).values()
-    if transactions:
-        transaction_list = [transact.to_dict() for transact in transactions]
+    try:
+        total = storage.count(Transaction)
 
-    if transaction_list is None:
-        abort(404)
-    return jsonify(transaction_list)
+        # Get query parameters (default to page 1, all items)
+        page = request.args.get('page', default=1, type=int)
+        limit = request.args.get('limit', default=total, type=int)
+        if page < 1 or limit < 1:
+            abort(404)
+
+        # Fetch paginated data
+        transactions = storage.paginate_data(Transaction, page, limit)
+
+        transactions_list = [transact.to_dict() for transact in transactions]
+        if not transactions_list:
+            abort(404)
+
+        return make_response(jsonify({
+            "page": page,
+            "limit": limit,
+            "total": total,
+            "total_pages": (total // limit) + (1 if total % limit else 0),
+            "data": transactions_list
+        }), 200)
+
+    except Exception as e:
+        return make_response(jsonify({"error": str(e)}), 500)
 
 
 @app_views.route('/transactions/<transaction_id>', methods=['GET'])
@@ -48,15 +67,15 @@ def post_transaction():
     """Add a new transaction object"""
     data = request.get_json(silent=True)
     if data is None:
-        return jsonify({"error": "Not a JSON"}), 400
+        abort(400, "Not a JSON")
     if 'transaction_type' not in data:
-        return jsonify({"error": "Missing transaction_type"}), 400
+        abort(400, "Missing transaction_type")
     if 'user_id' not in data:
-        return jsonify({"error": "Missing user_id"}), 400
+        abort(400, "Missing user_id")
     if 'total_amount' not in data:
-        return jsonify({"error": "Missing total_amount"})
+        abort(400, "Missing total_amount")
     if not data.get("customer_id") and not data.get("supplier_id"):
-        return jsonify({"error": "Missing customer_id or supplier_id"}), 400
+        abort(400, "Missing customer_id or supplier_id")
 
     # Ensure user is a valid user
     a_valid_user = storage.get(User, data['user_id'])
@@ -92,7 +111,7 @@ def put_transaction(transaction_id):
 
     data = request.get_json(silent=True)
     if data is None:
-        return jsonify({"error": "Not a JSON"}), 400
+        abort(400, "Not a JSON")
 
     # Skip immutable data
     skip = ['id', 'user_id', 'created_at', 'updated_at']
