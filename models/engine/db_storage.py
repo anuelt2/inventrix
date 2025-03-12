@@ -8,7 +8,7 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from models.base_model import BaseModel, Base
+from models.base_model import Base
 from models.category import Category
 from models.customer import Customer
 from models.supplier import Supplier
@@ -113,7 +113,7 @@ class DBStorage:
 
         return count
 
-    def get_by_attr(self, cls, key, value):
+    def get_by_attr(self, cls, **kwargs):
         """
         Retrieve object(s) of cls with attribute matching key: value
 
@@ -125,5 +125,5 @@ class DBStorage:
         Returns: A list of all object(s) that fit the criteria
         """
 
-        query = self.__session.query(cls).filter_by(**{key: value}).all()
+        query = self.__session.query(cls).filter_by(**kwargs).all()
         return query
