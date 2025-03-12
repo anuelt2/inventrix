@@ -71,12 +71,14 @@ def put_supplier(supplier_id):
             abort(400, description="Supplier name taken")
 
     if "phone" in data and data["phone"] != supplier.name:
-        existing_supplier = storage.get_by_attr(Supplier, "phone", data["phone"])
+        existing_supplier = storage.get_by_attr(Supplier,
+                                                "phone", data["phone"])
         if existing_supplier and existing_supplier[0].id != supplier.id:
             abort(400, description="Supplier phone number taken")
 
     if "email" in data and data["email"] != supplier.name:
-        existing_supplier = storage.get_by_attr(Supplier, "email", data["email"])
+        existing_supplier = storage.get_by_attr(Supplier,
+                                                "email", data["email"])
         if existing_supplier and existing_supplier[0].id != supplier.id:
             abort(400, description="Supplier email taken")
 
