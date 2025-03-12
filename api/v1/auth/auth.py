@@ -65,7 +65,9 @@ def login_user():
     if users:
         user = users[0]
     if user.check_password(password=data["password"]):
-        access_token = create_access_token(identity=user.email)
+        role = user.role.value
+        access_token = create_access_token(identity=user.email,
+                                           additional_claims={"role": role})
         refresh_token = create_refresh_token(identity=user.email)
 
         return jsonify(
