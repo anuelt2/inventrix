@@ -34,7 +34,7 @@ def get_users():
 
         return jsonify(staff_users_list)
 
-    return jsonify(users_list)
+    return jsonify(users_list), 200
 
 
 @app_views.route("/users/<user_id>/profile", methods=["GET"])
@@ -46,24 +46,22 @@ def get_user(user_id):
     claims = get_jwt()
     current_user_role = claims.get("role")
 
-    if current_user_id == user_id:
-        user = storage.get(User, user_id)
-
-    elif current_user_role == "admin":
-        user = storage.get(User, user_id)
-        if not user:
-            abort(404)
-        if user.role.value != "staff":
-            return jsonify({"error": "Access denied"}), 403
-
-    elif current_user_role == "superuser":
-        user = storage.get(User, user_id)
-
-    else:
-        return jsonify({"error": "Access denied"}), 403
+    user = storage.get(User, user_id)
 
     if not user:
         abort(404)
+
+    if current_user_id == user_id:
+        pass
+
+    elif current_user_role == "admin" and user.role.value == "staff":
+        pass
+
+    elif current_user_role == "superuser":
+        pass
+
+    else:
+        return jsonify({"error": "Access denied"}), 403
 
     return jsonify(serialize_user_role(user)), 200
 
@@ -77,14 +75,14 @@ def get_all_user_transactions(user_id):
     claims = get_jwt()
     current_user_role = claims.get("role")
 
-    if (current_user_id != user_id and
-            current_user_role not in ["superuser", "admin"]):
-        return jsonify({"error": "Access denied"}), 403
-
     user = storage.get(User, user_id)
 
     if not user:
         abort(404)
+
+    if (current_user_id != user_id and
+            current_user_role not in ["superuser", "admin"]):
+        return jsonify({"error": "Access denied"}), 403
 
     transactions = user.transactions
 
@@ -95,17 +93,19 @@ def get_all_user_transactions(user_id):
 @app_views.route("/users/<user_id>/update-profile", methods=["PUT"])
 @jwt_required()
 def put_user(user_id):
-    """Updates a User"""
+    """Updates a User profile"""
 
     current_user_id = get_jwt_identity()
 
-    if current_user_id == user_id:
-        user = storage.get(User, user_id)
-    else:
-        return jsonify({"error": "Access denied"}), 403
+    user = storage.get(User, user_id)
 
     if not user:
         abort(404)
+
+    if current_user_id == user_id:
+        pass
+    else:
+        return jsonify({"error": "Access denied"}), 403
 
     if not request.is_json:
         abort(400, description="Not a JSON")
