@@ -2,6 +2,7 @@
 """Config file"""
 from os import getenv
 from dotenv import load_dotenv
+from datetime import timedelta
 
 
 load_dotenv()
@@ -23,3 +24,6 @@ class Config:
                                                          IMS_MYSQL_PWD,
                                                          IMS_MYSQL_HOST,
                                                          IMS_MYSQL_DB)
+
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=60)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)
