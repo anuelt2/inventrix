@@ -78,7 +78,7 @@ def login_user():
         role = user.role.value
         access_token = create_access_token(identity=user.id,
                                            additional_claims={"role": role})
-        refresh_token = create_refresh_token(identity=user.email)
+        refresh_token = create_refresh_token(identity=user.id)
 
         return jsonify(
                 {
