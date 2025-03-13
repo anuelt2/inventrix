@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Implement RESTFul APIs for Product object"""
 from flask import jsonify, abort, make_response, request
+from flask_jwt_extended import jwt_required
 
 from api.v1.views import app_views
 from models import storage
@@ -11,32 +12,32 @@ from models.category import Category
 @app_views.route('/products', methods=['GET'])
 def get_products():
     """Retrieve the list of all products"""
-    try:
-        total = storage.count(Product)
+    total = storage.count(Product)
 
-        # Get query parameters (default to page 1, all items)
-        page = request.args.get('page', default=1, type=int)
-        limit = request.args.get('limit', default=total, type=int)
-        if page < 1 or limit < 1:
-            abort(404)
+    # Get query parameters (default to page 1, all items)
+    page = request.args.get('page', default=1, type=int)
+    limit = request.args.get('limit', default=total, type=int)
+    if page < 1 or limit < 1:
+        abort(404)
 
-        # Fetch paginated data
-        products = storage.paginate_data(Product, page, limit)
+    total_pages = (total // limit) + (1 if total % limit else 0)
+    if page > total_pages or limit > total:
+        abort(404)
 
-        products_list = [product.to_dict() for product in products]
-        if not products_list:
-            abort(404)
+    # Fetch paginated data
+    products = storage.paginate_data(Product, page, limit)
 
-        return make_response(jsonify({
-            "page": page,
-            "limit": limit,
-            "total": total,
-            "total_pages": (total // limit) + (1 if total % limit else 0),
-            "data": products_list
-        }), 200)
+    products_list = [product.to_dict() for product in products]
+    if not products_list:
+        abort(404)
 
-    except Exception as e:
-        return make_response(jsonify({"error": str(e)}), 500)
+    return make_response(jsonify({
+        "page": page,
+        "limit": limit,
+        "total": total,
+        "total_pages": total_pages,
+        "data": products_list
+    }), 200)
 
 
 @app_views.route('/products/<product_id>', methods=['GET'])
@@ -49,6 +50,7 @@ def get_product(product_id):
 
 
 @app_views.route('/products/<product_id>', methods=['DELETE'])
+@jwt_required()
 def delete_product(product_id):
     """Deletes a product object"""
     product = storage.get(Product, product_id)
@@ -61,6 +63,7 @@ def delete_product(product_id):
 
 
 @app_views.route('/products/', methods=['POST'])
+@jwt_required()
 def post_product():
     """Add a new product object"""
     data = request.get_json(silent=True)
@@ -90,6 +93,7 @@ def post_product():
 
 
 @app_views.route('/products/<product_id>', methods=['PUT'])
+@jwt_required()
 def put_product(product_id):
     """Updates exiting data of a product object"""
     product = storage.get(Product, product_id)

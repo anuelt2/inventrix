@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Implement RESTFul APIs for Transaction object"""
 from flask import jsonify, abort, make_response, request
+from flask_jwt_extended import jwt_required
 
 from api.v1.views import app_views
 from models import storage
@@ -13,32 +14,32 @@ from models.supplier import Supplier
 @app_views.route('/transactions', methods=['GET'])
 def get_transactions():
     """Retrieve the list of all transactions"""
-    try:
-        total = storage.count(Transaction)
+    total = storage.count(Transaction)
 
-        # Get query parameters (default to page 1, all items)
-        page = request.args.get('page', default=1, type=int)
-        limit = request.args.get('limit', default=total, type=int)
-        if page < 1 or limit < 1:
-            abort(404)
+    # Get query parameters (default to page 1, all items)
+    page = request.args.get('page', default=1, type=int)
+    limit = request.args.get('limit', default=total, type=int)
+    if page < 1 or limit < 1:
+        abort(404)
 
-        # Fetch paginated data
-        transactions = storage.paginate_data(Transaction, page, limit)
+    total_pages = (total // limit) + (1 if total % limit else 0)
+    if page > total_pages or limit > total:
+        abort(404)
 
-        transactions_list = [transact.to_dict() for transact in transactions]
-        if not transactions_list:
-            abort(404)
+    # Fetch paginated data
+    transactions = storage.paginate_data(Transaction, page, limit)
 
-        return make_response(jsonify({
-            "page": page,
-            "limit": limit,
-            "total": total,
-            "total_pages": (total // limit) + (1 if total % limit else 0),
-            "data": transactions_list
-        }), 200)
+    transactions_list = [transact.to_dict() for transact in transactions]
+    if not transactions_list:
+        abort(404)
 
-    except Exception as e:
-        return make_response(jsonify({"error": str(e)}), 500)
+    return make_response(jsonify({
+        "page": page,
+        "limit": limit,
+        "total": total,
+        "total_pages": total_pages,
+        "data": transactions_list
+    }), 200)
 
 
 @app_views.route('/transactions/<transaction_id>', methods=['GET'])
@@ -51,6 +52,7 @@ def get_transaction(transaction_id):
 
 
 @app_views.route('/transactions/<transaction_id>', methods=['DELETE'])
+@jwt_required()
 def delete_transaction(transaction_id):
     """Deletes a transaction object"""
     transaction = storage.get(Transaction, transaction_id)
@@ -63,6 +65,7 @@ def delete_transaction(transaction_id):
 
 
 @app_views.route('/transactions', methods=['POST'])
+@jwt_required()
 def post_transaction():
     """Add a new transaction object"""
     data = request.get_json(silent=True)
@@ -103,6 +106,7 @@ def post_transaction():
 
 
 @app_views.route('/transactions/<transaction_id>', methods=['PUT'])
+@jwt_required()
 def put_transaction(transaction_id):
     """Updates exiting data of a transaction object"""
     transaction = storage.get(Transaction, transaction_id)
