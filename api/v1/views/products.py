@@ -7,37 +7,22 @@ from api.v1.views import app_views
 from models import storage
 from models.product import Product
 from models.category import Category
+from api.utils.paginate import paginate
 
 
 @app_views.route('/products', methods=['GET'])
 def get_products():
     """Retrieve the list of all products"""
-    total = storage.count(Product)
-
     # Get query parameters (default to page 1, all items)
     page = request.args.get('page', default=1, type=int)
-    limit = request.args.get('limit', default=total, type=int)
-    if page < 1 or limit < 1:
-        abort(404)
-
+    limit = request.args.get('limit', default=10, type=int)
+    total = storage.count(Product)
     total_pages = (total // limit) + (1 if total % limit else 0)
-    if page > total_pages or limit > total:
-        abort(404)
 
-    # Fetch paginated data
-    products = storage.paginate_data(Product, page, limit)
+    products = paginate(Product, page, limit, total, total_pages)
 
-    products_list = [product.to_dict() for product in products]
-    if not products_list:
-        abort(404)
-
-    return make_response(jsonify({
-        "page": page,
-        "limit": limit,
-        "total": total,
-        "total_pages": total_pages,
-        "data": products_list
-    }), 200)
+    response = make_response(jsonify(products))
+    return response
 
 
 @app_views.route('/products/<product_id>', methods=['GET'])
