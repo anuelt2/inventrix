@@ -13,9 +13,6 @@ from api.utils.paginate import paginate, get_paginate_args
 def get_suppliers():
     """Retrieves list of all Supplier objects"""
 
-#    all_suppliers = storage.all(Supplier).values()
-
-#    return jsonify([supplier.to_dict() for supplier in all_suppliers])
     paginate_args = get_paginate_args(Supplier, **request.args)
     suppliers = paginate(**paginate_args)
 
