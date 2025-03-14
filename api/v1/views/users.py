@@ -6,7 +6,7 @@ from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from api.v1.views import app_views
 from models import storage
 from models.user import User, UserRole
-
+from api.utils.paginate import paginate, get_paginate_args
 
 @app_views.route("/users", methods=["GET"])
 @jwt_required()
@@ -18,23 +18,17 @@ def get_users():
     if role not in ["superuser", "admin"]:
         return jsonify({"error": "Access denied"}), 403
 
-    all_users = storage.all(User).values()
+    paginate_args =get_paginate_args(User, **request.args)
+    paginated_users = paginate(**paginate_args)
 
-    users_list = []
-
-    for user in all_users:
-        user_dict = serialize_user_role(user)
-        users_list.append(user_dict)
+    paginated_users["data"] = [serialize_user_role(user)
+                               for user in paginated_users["data"]]
 
     if role == "admin":
-        staff_users_list = []
-        for staff_user in users_list:
-            if staff_user["role"] == "staff":
-                staff_users_list.append(staff_user)
+        paginated_user["data"] = [user for user in paginated_users["data"]
+                                  if user["role"] == "staff"]
 
-        return jsonify(staff_users_list)
-
-    return jsonify(users_list), 200
+    return jsonify(paginated_users), 200
 
 
 @app_views.route("/users/<user_id>/profile", methods=["GET"])
@@ -220,9 +214,15 @@ def delete_user(user_id):
 def serialize_user_role(user):
     """Converts User instance to dict and stringify `role` value"""
 
-    user_dict = user.to_dict()
+    if user is None:
+        return {}
 
-    if isinstance(user_dict["role"], UserRole):
+    if isinstance(user, dict):
+        user_dict = user
+    else:
+        user_dict = user.to_dict()
+
+    if "role" in user_dict and  isinstance(user_dict["role"], UserRole):
         user_dict["role"] = user_dict["role"].value
 
     return user_dict
