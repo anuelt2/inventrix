@@ -9,6 +9,8 @@ from models.transaction import Transaction
 from models.user import User
 from models.customer import Customer
 from models.supplier import Supplier
+from models.product import Product
+from models.transaction_item import TransactionItem
 
 
 @app_views.route('/transactions', methods=['GET'])
@@ -66,7 +68,7 @@ def delete_transaction(transaction_id):
 
 @app_views.route('/transactions', methods=['POST'])
 @jwt_required()
-def post_transaction():
+def post_transact():
     """Add a new transaction object"""
     data = request.get_json(silent=True)
     if data is None:
@@ -75,15 +77,20 @@ def post_transaction():
         abort(400, "Missing transaction_type")
     if 'user_id' not in data:
         abort(400, "Missing user_id")
-    if 'total_amount' not in data:
-        abort(400, "Missing total_amount")
     if not data.get("customer_id") and not data.get("supplier_id"):
         abort(400, "Missing customer_id or supplier_id")
+    if 'transaction_items' not in data:
+        abort(400, "Missing transaction_item(s)")
+    if not isinstance(data['transaction_items'], list):
+        abort(400, "Invalid transaction_items (must be a list)")
 
     # Ensure user is a valid user
     a_valid_user = storage.get(User, data['user_id'])
     if not a_valid_user:
         abort(404)
+
+    transaction_items = data['transaction_items']
+    del data['transaction_items']
 
     # Validate transaction by transaction type
     try:
@@ -100,43 +107,60 @@ def post_transaction():
         a_valid_supplier = storage.get(Supplier, transaction.supplier_id)
         if not a_valid_supplier:
             abort(404)
+    
+    transaction_item_objs = []
+    total_amount = 0
 
+    # Process transaction items
+    items = transaction_items
+    if not items:
+        abort(400, "Transaction must contain at least an item")
+
+    for item in items:
+        item = dict(item)
+        if not isinstance(item, dict):
+            abort(400, "Invalid transaction item format")
+
+        product_id = item.get("product_id")
+        quantity = item.get("quantity")
+        unit_price = item.get("unit_price")
+        total = item.get("total")
+
+        if not product_id:
+            abort(400, "Missing product_id in transaction item")
+        if not quantity:
+            abort(400, f"Missing quantity for product_id {product_id}")
+        if not unit_price:
+            abort(400, f"Missing unit_price for product_id {product_id}")
+        if not total:
+            abort(400, f"Missing total for product_id {product_id}")
+
+        # Ensure the product exists
+        product = storage.get(Product, product_id)
+        if not product:
+            abort(404, f"Product with id {product_id} not found")
+
+        # Create transaction item object
+        transaction_item = TransactionItem(**item)
+        transaction_item.transaction_id = transaction.id
+        transaction_item_objs.append(transaction_item)
+        total_amount += total
+
+    # Assign total amount and save transaction
+    transaction.total_amount = total_amount
     transaction.save()
-    return make_response(jsonify(transaction.to_dict()), 201)
 
+    # Save all transaction items
+    for transaction_item in transaction_item_objs:
+        transaction_item.save()
 
-@app_views.route('/transactions/<transaction_id>', methods=['PUT'])
-@jwt_required()
-def put_transaction(transaction_id):
-    """Updates exiting data of a transaction object"""
-    transaction = storage.get(Transaction, transaction_id)
+    # Retrieve and format response
+    transaction = storage.get(Transaction, transaction.id)
     if not transaction:
-        abort(404)
+        abort(404, "Invalid transaction")
 
-    data = request.get_json(silent=True)
-    if data is None:
-        abort(400, "Not a JSON")
+    transaction_items = [t_item.to_dict() for t_item in transaction.transaction_items]
+    transaction_dict = transaction.to_dict()
+    transaction_dict.update({'transaction_items': transaction_items})
 
-    # Skip data
-    skip = ['id', 'user_id', 'created_at', 'updated_at']
-
-    # Set attributes and validate transaction by transaction type
-    try:
-        for key, value in data.items():
-            if key not in skip:
-                setattr(transaction, key, value)
-    except Exception as e:
-        return make_response(jsonify({"error": str(e)})), 409
-
-    # Enusure customer or supplier is valid
-    if transaction.transaction_type == 'sale':
-        a_valid_customer = storage.get(Customer, transaction.customer_id)
-        if not a_valid_customer:
-            abort(404)
-    else:
-        a_valid_supplier = storage.get(Supplier, transaction.supplier_id)
-        if not a_valid_supplier:
-            abort(404)
-
-    transaction.save()
-    return make_response(jsonify(transaction.to_dict()), 200)
+    return make_response(jsonify(transaction_dict), 201)
