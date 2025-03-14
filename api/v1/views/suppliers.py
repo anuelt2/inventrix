@@ -6,15 +6,20 @@ from flask_jwt_extended import jwt_required, get_jwt
 from api.v1.views import app_views
 from models import storage
 from models.supplier import Supplier
+from api.utils.paginate import paginate, get_paginate_args
 
 
 @app_views.route("/suppliers", methods=['GET'])
 def get_suppliers():
     """Retrieves list of all Supplier objects"""
 
-    all_suppliers = storage.all(Supplier).values()
+#    all_suppliers = storage.all(Supplier).values()
 
-    return jsonify([supplier.to_dict() for supplier in all_suppliers])
+#    return jsonify([supplier.to_dict() for supplier in all_suppliers])
+    paginate_args = get_paginate_args(Supplier, **request.args)
+    suppliers = paginate(**paginate_args)
+
+    return jsonify(suppliers), 200
 
 
 @app_views.route("/suppliers/<supplier_id>", methods=['GET'])
