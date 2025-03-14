@@ -164,3 +164,40 @@ def post_transact():
     transaction_dict.update({'transaction_items': transaction_items})
 
     return make_response(jsonify(transaction_dict), 201)
+
+
+@app_views.route('/transactions/<transaction_id>', methods=['PUT'])
+@jwt_required()
+def put_transaction(transaction_id):
+    """Updates exiting data of a transaction object"""
+    transaction = storage.get(Transaction, transaction_id)
+    if not transaction:
+        abort(404)
+
+    data = request.get_json(silent=True)
+    if data is None:
+        abort(400, "Not a JSON")
+
+    # Skip data
+    skip = ['id', 'user_id', 'created_at', 'updated_at']
+
+    # Set attributes and validate transaction by transaction type
+    try:
+        for key, value in data.items():
+            if key not in skip:
+                setattr(transaction, key, value)
+    except Exception as e:
+        return make_response(jsonify({"error": str(e)})), 409
+
+    # Enusure customer or supplier is valid
+    if transaction.transaction_type == 'sale':
+        a_valid_customer = storage.get(Customer, transaction.customer_id)
+        if not a_valid_customer:
+            abort(404)
+    else:
+        a_valid_supplier = storage.get(Supplier, transaction.supplier_id)
+        if not a_valid_supplier:
+            abort(404)
+
+    transaction.save()
+    return make_response(jsonify(transaction.to_dict()), 200)
