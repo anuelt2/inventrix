@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 """Implement RESTFul APIs for Product object"""
 from flask import jsonify, abort, make_response, request
-from flask_jwt_extended import jwt_required
 
 from api.v1.views import app_views
 from models import storage
 from models.product import Product
 from models.category import Category
 from api.utils.paginate import paginate, get_paginate_args
+from api.utils.role_decorator import role_required
 
 
 @app_views.route('/products', methods=['GET'])
@@ -31,7 +31,7 @@ def get_product(product_id):
 
 
 @app_views.route('/products/<product_id>', methods=['DELETE'])
-@jwt_required()
+@role_required(["superuser", "admin"])
 def delete_product(product_id):
     """Deletes a product object"""
     product = storage.get(Product, product_id)
@@ -44,7 +44,7 @@ def delete_product(product_id):
 
 
 @app_views.route('/products/', methods=['POST'])
-@jwt_required()
+@role_required(["superuser", "admin"])
 def post_product():
     """Add a new product object"""
     data = request.get_json(silent=True)
@@ -74,7 +74,7 @@ def post_product():
 
 
 @app_views.route('/products/<product_id>', methods=['PUT'])
-@jwt_required()
+@role_required(["superuser", "admin"])
 def put_product(product_id):
     """Updates exiting data of a product object"""
     product = storage.get(Product, product_id)

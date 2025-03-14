@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Implement RESTFul APIs for Transaction object"""
 from flask import jsonify, abort, make_response, request
-from flask_jwt_extended import jwt_required
 
 from api.v1.views import app_views
 from models import storage
@@ -11,9 +10,11 @@ from models.customer import Customer
 from models.supplier import Supplier
 from models.product import Product
 from models.transaction_item import TransactionItem
+from api.utils.role_decorator import role_required
 
 
 @app_views.route('/transactions', methods=['GET'])
+@role_required(["superuser", "admin", "user"])
 def get_transactions():
     """Retrieve the list of all transactions"""
     total = storage.count(Transaction)
@@ -45,6 +46,7 @@ def get_transactions():
 
 
 @app_views.route('/transactions/<transaction_id>', methods=['GET'])
+@role_required(["superuser", "admin", "user"])
 def get_transaction(transaction_id):
     """Retrieves a transaction"""
     transaction = storage.get(Transaction, transaction_id)
@@ -54,7 +56,7 @@ def get_transaction(transaction_id):
 
 
 @app_views.route('/transactions/<transaction_id>', methods=['DELETE'])
-@jwt_required()
+@role_required(["superuser"])
 def delete_transaction(transaction_id):
     """Deletes a transaction object"""
     transaction = storage.get(Transaction, transaction_id)
@@ -67,7 +69,7 @@ def delete_transaction(transaction_id):
 
 
 @app_views.route('/transactions', methods=['POST'])
-@jwt_required()
+@role_required(["superuser", "admin", "staff"])
 def post_transact():
     """Add a new transaction object"""
     data = request.get_json(silent=True)
@@ -167,7 +169,7 @@ def post_transact():
 
 
 @app_views.route('/transactions/<transaction_id>', methods=['PUT'])
-@jwt_required()
+@role_required(["superuser"])
 def put_transaction(transaction_id):
     """Updates exiting data of a transaction object"""
     transaction = storage.get(Transaction, transaction_id)
