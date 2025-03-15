@@ -10,6 +10,7 @@ from api.utils.paginate import paginate, get_paginate_args
 
 
 @app_views.route("/customers", methods=['GET'])
+@jwt_required()
 def get_customers():
     """Retrieves list of all Customer objects"""
 
@@ -20,6 +21,7 @@ def get_customers():
 
 
 @app_views.route("/customers/<customer_id>", methods=['GET'])
+@jwt_required()
 def get_customer(customer_id):
     """Retrieves a specific Customer"""
 
@@ -32,6 +34,7 @@ def get_customer(customer_id):
 
 
 @app_views.route("/customers/<customer_id>/transactions", methods=['GET'])
+@jwt_required()
 def get_all_customer_transactions(customer_id):
     """Retrieves a specific Customer transactions"""
 
@@ -46,6 +49,7 @@ def get_all_customer_transactions(customer_id):
 
 
 @app_views.route("/customers", methods=['POST'])
+@jwt_required()
 def post_customer():
     """Creates a new Customer"""
 
@@ -61,6 +65,7 @@ def post_customer():
 
 
 @app_views.route("/customers/<customer_id>", methods=['PUT'])
+@jwt_required()
 def put_customer(customer_id):
     """Updates a Customer"""
 
