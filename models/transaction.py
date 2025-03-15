@@ -17,8 +17,6 @@ class Transaction(BaseModel, Base):
     supplier_id = Column(String(60), ForeignKey('suppliers.id'), nullable=True)
     customer_id = Column(String(60), ForeignKey('customers.id'), nullable=True)
     total_amount = Column(Numeric(10, 2), nullable=False, default=0.00)
-    transaction_date = Column(
-            DateTime, nullable=False, default=datetime.utcnow)
     transaction_items = relationship(
         'TransactionItem', backref='transaction', cascade="all, delete")
 

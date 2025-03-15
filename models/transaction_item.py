@@ -17,6 +17,10 @@ class TransactionItem(BaseModel, Base):
                         nullable=False,
                         default=0.0)
 
+    total = Column(DECIMAL(10, 2),
+                   nullable=False,
+                   default=quantity * unit_price)
+
     transaction_id = Column(String(60),
                             ForeignKey('transactions.id'),
                             nullable=False)
@@ -24,5 +28,5 @@ class TransactionItem(BaseModel, Base):
     product_id = Column(String(60),
                         ForeignKey('products.id'),
                         nullable=False)
-    
+
     product = relationship('Product', backref='transaction_items')
