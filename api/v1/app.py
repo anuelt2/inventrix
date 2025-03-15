@@ -9,11 +9,12 @@ from api.v1.views import app_views
 from api.v1.auth import app_auth
 from config import Config
 from api.v1.auth.jwt_setup import jwt
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config.from_object(Config)
-
+cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 jwt.init_app(app)
 
 from api.v1.auth.jwt_helpers import check_token_blocklist
