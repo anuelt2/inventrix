@@ -7,6 +7,8 @@ from api.v1.views import app_views
 from models import storage
 from models.user import User, UserRole
 from api.utils.paginate import paginate, get_paginate_args
+from api.utils.serialize_user_role import serialize_user_role
+
 
 @app_views.route("/users", methods=["GET"])
 @jwt_required()
@@ -18,7 +20,7 @@ def get_users():
     if role not in ["superuser", "admin"]:
         return jsonify({"error": "Access denied"}), 403
 
-    paginate_args =get_paginate_args(User, **request.args)
+    paginate_args = get_paginate_args(User, **request.args)
     paginated_users = paginate(**paginate_args)
 
     paginated_users["data"] = [serialize_user_role(user)
@@ -209,20 +211,3 @@ def delete_user(user_id):
     storage.save()
 
     return jsonify({}), 200
-
-
-def serialize_user_role(user):
-    """Converts User instance to dict and stringify `role` value"""
-
-    if user is None:
-        return {}
-
-    if isinstance(user, dict):
-        user_dict = user
-    else:
-        user_dict = user.to_dict()
-
-    if "role" in user_dict and  isinstance(user_dict["role"], UserRole):
-        user_dict["role"] = user_dict["role"].value
-
-    return user_dict
