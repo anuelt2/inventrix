@@ -10,6 +10,7 @@ from api.utils.paginate import paginate, get_paginate_args
 
 
 @app_views.route("/suppliers", methods=['GET'])
+@jwt_required()
 def get_suppliers():
     """Retrieves list of all Supplier objects"""
 
@@ -20,6 +21,7 @@ def get_suppliers():
 
 
 @app_views.route("/suppliers/<supplier_id>", methods=['GET'])
+@jwt_required()
 def get_supplier(supplier_id):
     """Retrieves a specific Supplier"""
 
@@ -32,6 +34,7 @@ def get_supplier(supplier_id):
 
 
 @app_views.route("/suppliers/<supplier_id>/transactions", methods=['GET'])
+@jwt_required()
 def get_all_supplier_transactions(supplier_id):
     """Retrieves a specific Supplier transactions"""
 
@@ -46,6 +49,7 @@ def get_all_supplier_transactions(supplier_id):
 
 
 @app_views.route("/suppliers/<supplier_id>/products", methods=['GET'])
+@jwt_required()
 def get_all_supplier_products(supplier_id):
     """Retrieves a specific Supplier products"""
 
