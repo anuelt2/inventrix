@@ -11,6 +11,7 @@ from api.v1.auth import app_auth
 from api.v1.auth.blocklist import blocklist
 from models import storage
 from models.user import User, UserRole
+from api.utils.serialize_user_role import serialize_user_role
 
 
 @app_auth.route("/register", methods=['POST'])
@@ -113,14 +114,3 @@ def refresh_token():
     new_access_token = create_access_token(identity=current_user_id)
 
     return jsonify({"access_token": new_access_token}), 200
-
-
-def serialize_user_role(user):
-    """Converts User instance to dict and stringify `role` value"""
-
-    user_dict = user.to_dict()
-
-    if isinstance(user_dict["role"], UserRole):
-        user_dict["role"] = user_dict["role"].value
-
-    return user_dict
