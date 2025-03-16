@@ -6,7 +6,7 @@ from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from api.v1.views import app_views
 from models import storage
 from models.user import User, UserRole
-
+from api.utils.paginate import paginate, get_paginate_args
 
 @app_views.route("/users", methods=["GET"])
 @jwt_required()
@@ -18,23 +18,17 @@ def get_users():
     if role not in ["superuser", "admin"]:
         return jsonify({"error": "Access denied"}), 403
 
-    all_users = storage.all(User).values()
+    paginate_args =get_paginate_args(User, **request.args)
+    paginated_users = paginate(**paginate_args)
 
-    users_list = []
-
-    for user in all_users:
-        user_dict = serialize_user_role(user)
-        users_list.append(user_dict)
+    paginated_users["data"] = [serialize_user_role(user)
+                               for user in paginated_users["data"]]
 
     if role == "admin":
-        staff_users_list = []
-        for staff_user in users_list:
-            if staff_user["role"] == "staff":
-                staff_users_list.append(staff_user)
+        paginated_user["data"] = [user for user in paginated_users["data"]
+                                  if user["role"] == "staff"]
 
-        return jsonify(staff_users_list)
-
-    return jsonify(users_list)
+    return jsonify(paginated_users), 200
 
 
 @app_views.route("/users/<user_id>/profile", methods=["GET"])
@@ -46,24 +40,22 @@ def get_user(user_id):
     claims = get_jwt()
     current_user_role = claims.get("role")
 
-    if current_user_id == user_id:
-        user = storage.get(User, user_id)
-
-    elif current_user_role == "admin":
-        user = storage.get(User, user_id)
-        if not user:
-            abort(404)
-        if user.role.value != "staff":
-            return jsonify({"error": "Access denied"}), 403
-
-    elif current_user_role == "superuser":
-        user = storage.get(User, user_id)
-
-    else:
-        return jsonify({"error": "Access denied"}), 403
+    user = storage.get(User, user_id)
 
     if not user:
         abort(404)
+
+    if current_user_id == user_id:
+        pass
+
+    elif current_user_role == "admin" and user.role.value == "staff":
+        pass
+
+    elif current_user_role == "superuser":
+        pass
+
+    else:
+        return jsonify({"error": "Access denied"}), 403
 
     return jsonify(serialize_user_role(user)), 200
 
@@ -77,14 +69,14 @@ def get_all_user_transactions(user_id):
     claims = get_jwt()
     current_user_role = claims.get("role")
 
-    if (current_user_id != user_id and
-            current_user_role not in ["superuser", "admin"]):
-        return jsonify({"error": "Access denied"}), 403
-
     user = storage.get(User, user_id)
 
     if not user:
         abort(404)
+
+    if (current_user_id != user_id and
+            current_user_role not in ["superuser", "admin"]):
+        return jsonify({"error": "Access denied"}), 403
 
     transactions = user.transactions
 
@@ -95,17 +87,19 @@ def get_all_user_transactions(user_id):
 @app_views.route("/users/<user_id>/update-profile", methods=["PUT"])
 @jwt_required()
 def put_user(user_id):
-    """Updates a User"""
+    """Updates a User profile"""
 
     current_user_id = get_jwt_identity()
 
-    if current_user_id == user_id:
-        user = storage.get(User, user_id)
-    else:
-        return jsonify({"error": "Access denied"}), 403
+    user = storage.get(User, user_id)
 
     if not user:
         abort(404)
+
+    if current_user_id == user_id:
+        pass
+    else:
+        return jsonify({"error": "Access denied"}), 403
 
     if not request.is_json:
         abort(400, description="Not a JSON")
@@ -220,9 +214,15 @@ def delete_user(user_id):
 def serialize_user_role(user):
     """Converts User instance to dict and stringify `role` value"""
 
-    user_dict = user.to_dict()
+    if user is None:
+        return {}
 
-    if isinstance(user_dict["role"], UserRole):
+    if isinstance(user, dict):
+        user_dict = user
+    else:
+        user_dict = user.to_dict()
+
+    if "role" in user_dict and  isinstance(user_dict["role"], UserRole):
         user_dict["role"] = user_dict["role"].value
 
     return user_dict

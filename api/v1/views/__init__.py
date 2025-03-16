@@ -9,3 +9,5 @@ from api.v1.views.transactions import *
 from api.v1.views.suppliers import *
 from api.v1.views.customers import *
 from api.v1.views.users import *
+from api.v1.views.categories import *
+from api.v1.views.transaction_items import *
