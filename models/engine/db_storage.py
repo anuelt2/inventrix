@@ -8,7 +8,7 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from models.base_model import BaseModel, Base
+from models.base_model import Base
 from models.category import Category
 from models.customer import Customer
 from models.supplier import Supplier
@@ -112,3 +112,28 @@ class DBStorage:
             count = len(self.all(cls).values())
 
         return count
+
+    def get_by_attr(self, cls, **kwargs):
+        """
+        Retrieve object(s) of cls with attribute matching key: value
+
+        Parameters:
+            cls (class): Model to query
+            key (str): Attribute to filter by
+            value (str): Value of @key
+
+        Returns: A list of all object(s) that fit the criteria
+        """
+
+        query = self.__session.query(cls).filter_by(**kwargs).all()
+        return query
+
+    def paginate_data(self, cls, page, limit):
+        """Return the output from paginated requests"""
+        return self.__session.query(cls).offset(
+            (page - 1) * limit).limit(limit).all()
+
+    def paginate_filter_data(self, cls, filter_field, filter_value):
+        """Return the output from paginated requests with filter parameters"""
+        return (self.__session.query(cls).filter(
+            getattr(cls, filter_field) == filter_value))
