@@ -2,11 +2,11 @@ Inventrix - The frontend
 ========================
 
 ## Setup
-`bash
+```bash
 yarn install
-`
+```
 
 ## Start App
-`bash
+```bash
 yarn run dev
-`
+```
