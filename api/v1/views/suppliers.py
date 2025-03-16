@@ -85,21 +85,16 @@ def get_all_supplier_products(supplier_id):
 
     paginate_args = get_paginate_args(Product, **request.args)
 
-    products_query = (storage.paginate_filter_data(
-        Product, "supplier_id", supplier_id))
+    products_query = supplier.products
 
-    paginate_args["total"] = products_query.count()
+    paginate_args["total"] = len(products_query)
 
     paginate_args["total_pages"] = ((paginate_args[
         "total"] + paginate_args["limit"] - 1) // paginate_args["limit"])
 
     model = paginate_args.get("type")
 
-    products = (products_query.offset((
-        paginate_args["page"] - 1) * paginate_args["limit"]).
-                    limit(paginate_args["limit"]).all())
-
-    products_data = [product.to_dict() for product in products]
+    products_data = [product.to_dict() for product in products_query]
 
     return jsonify({
         "page": paginate_args["page"],
