@@ -6,15 +6,17 @@ from flask_jwt_extended import jwt_required, get_jwt
 from api.v1.views import app_views
 from models import storage
 from models.customer import Customer
+from api.utils.paginate import paginate, get_paginate_args
 
 
 @app_views.route("/customers", methods=['GET'])
 def get_customers():
     """Retrieves list of all Customer objects"""
 
-    all_customers = storage.all(Customer).values()
+    paginate_args = get_paginate_args(Customer, **request.args)
+    customers = paginate(**paginate_args)
 
-    return jsonify([customer.to_dict() for customer in all_customers])
+    return jsonify(customers), 200
 
 
 @app_views.route("/customers/<customer_id>", methods=['GET'])
