@@ -7,10 +7,12 @@ from models.transaction_item import TransactionItem
 from models import storage
 from flask import make_response, jsonify, abort, request
 from api.utils.role_decorator import role_required
+from flask_jwt_extended import jwt_required
 
 
 @app_views.route('/transactions/<transaction_id>/transaction_items',
                  methods=['GET'])
+@jwt_required()
 def get_transaction_transaction_items(transaction_id=None):
     """
     Retrieve all TransactionItem objects of a Transaction object
@@ -47,6 +49,7 @@ def get_transaction_transaction_items(transaction_id=None):
 
 @app_views.route('/transactions/<transaction_id>/transaction_items/\
 <transaction_item_id>', methods=['GET'])
+@jwt_required()
 def get_transaction_transaction_item_by_id(transaction_id,
                                            transaction_item_id):
     """
@@ -96,6 +99,7 @@ Transaction '{transaction_id}'."
 
 @app_views.route('/transactions/<transaction_id>/transaction_items/\
 <transaction_item_id>', methods=['PUT'])
+@jwt_required()
 @role_required(['admin', 'superuser'])
 def update_transaction_item_by_id(transaction_id, transaction_item_id):
     """
@@ -165,6 +169,7 @@ Transaction '{transaction_id}'."
 
 @app_views.route('/transactions/<transaction_id>/transaction_items/\
 <transaction_item_id>', methods=['DELETE'])
+@jwt_required()
 @role_required(['admin', 'superuser'])
 def delete_transaction_item_by_id(transaction_id, transaction_item_id):
     """
