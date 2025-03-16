@@ -6,6 +6,8 @@ from flask_jwt_extended import jwt_required, get_jwt
 from api.v1.views import app_views
 from models import storage
 from models.supplier import Supplier
+from models.product import Product
+from models.transaction import Transaction
 from api.utils.paginate import paginate, get_paginate_args
 
 
@@ -43,9 +45,32 @@ def get_all_supplier_transactions(supplier_id):
     if not supplier:
         abort(404)
 
-    transactions = supplier.transactions
+    paginate_args = get_paginate_args(Transaction, **request.args)
 
-    return jsonify([transaction.to_dict() for transaction in transactions])
+    transactions_query = (storage.paginate_filter_data(
+        Transaction, "supplier_id", supplier_id))
+
+    paginate_args["total"] = transactions_query.count()
+
+    paginate_args["total_pages"] = ((paginate_args[
+        "total"] + paginate_args["limit"] - 1) // paginate_args["limit"])
+
+    model = paginate_args.get("type")
+
+    transactions = (transactions_query.offset((
+        paginate_args["page"] - 1) * paginate_args["limit"]).
+                    limit(paginate_args["limit"]).all())
+
+    transactions_data = [transaction.to_dict() for transaction in transactions]
+
+    return jsonify({
+        "page": paginate_args["page"],
+        "limit": paginate_args["limit"],
+        "total": paginate_args["total"],
+        "total_pages": paginate_args["total_pages"],
+        "type": model.__name__,
+        "data": transactions_data
+        }), 200
 
 
 @app_views.route("/suppliers/<supplier_id>/products", methods=['GET'])
@@ -58,9 +83,32 @@ def get_all_supplier_products(supplier_id):
     if not supplier:
         abort(404)
 
-    products = supplier.products
+    paginate_args = get_paginate_args(Product, **request.args)
 
-    return jsonify([product.to_dict() for product in products])
+    products_query = (storage.paginate_filter_data(
+        Product, "supplier_id", supplier_id))
+
+    paginate_args["total"] = products_query.count()
+
+    paginate_args["total_pages"] = ((paginate_args[
+        "total"] + paginate_args["limit"] - 1) // paginate_args["limit"])
+
+    model = paginate_args.get("type")
+
+    products = (products_query.offset((
+        paginate_args["page"] - 1) * paginate_args["limit"]).
+                    limit(paginate_args["limit"]).all())
+
+    products_data = [product.to_dict() for product in products]
+
+    return jsonify({
+        "page": paginate_args["page"],
+        "limit": paginate_args["limit"],
+        "total": paginate_args["total"],
+        "total_pages": paginate_args["total_pages"],
+        "type": model.__name__,
+        "data": products_data
+        }), 200
 
 
 @app_views.route("/suppliers", methods=['POST'])
