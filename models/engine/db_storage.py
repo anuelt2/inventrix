@@ -129,6 +129,11 @@ class DBStorage:
         return query
 
     def paginate_data(self, cls, page, limit):
-        """Return the output from parginated requests"""
+        """Return the output from paginated requests"""
         return self.__session.query(cls).offset(
             (page - 1) * limit).limit(limit).all()
+
+    def paginate_filter_data(self, cls, filter_field, filter_value):
+        """Return the output from paginated requests with filter parameters"""
+        return (self.__session.query(cls).filter(
+            getattr(cls, filter_field) == filter_value))
