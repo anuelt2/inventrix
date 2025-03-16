@@ -28,7 +28,7 @@ def get_users():
                                for user in paginated_users["data"]]
 
     if role == "admin":
-        paginated_user["data"] = [user for user in paginated_users["data"]
+        paginated_users["data"] = [user for user in paginated_users["data"]
                                   if user["role"] == "staff"]
 
     return jsonify(paginated_users), 200
