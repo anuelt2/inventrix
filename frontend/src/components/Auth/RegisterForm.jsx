@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Form from "../UI/InputForm";
-import { AuthContext } from "../../context/AuthContext";
+import { registerUser } from "../../services/AuthService";
 
 const Register = () => {
   const [errors, setErrors] = useState({});
