@@ -49,7 +49,7 @@ const Login = () => {
   // Login form
   return (
     <div className="fixed inset-0 flex items-center justify-center min-h-screen w-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+      <div className="bg-white p-20 rounded-lg shadow-md w-130">
         <h2 className="text-gray-900 text-2xl font-bl=old mb-4 text-center">Login</h2>
         {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
         {success && <p className="text-green-500 text-sm mb-2">{success}</p>}
@@ -61,7 +61,8 @@ const Login = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all" 
+            
           />
           <input
             type="password"
@@ -70,9 +71,9 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+             className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all" 
           />
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300">Login</button>
+          <button type="submit" className="w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Login</button>
         </form>
       </div>
     </div>

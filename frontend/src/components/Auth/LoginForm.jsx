@@ -28,21 +28,23 @@ const Login = () => {
     console.log("Submitting:", formData);
     try {
       const response = await API.post("/auth/login", formData);
-      localStorage.setItem("access_token", response.tokens.access);
+      localStorage.setItem("access_token", response.data.tokens.access);
       navigate("/dashboard");
     } catch (error) {
+      console.log(error)
       setErrors({ general: "Invalid email or password" });
+      console.log(errors)
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div>
       <Form
         fields={fields}
         onSubmit={handleSubmit}
         buttonText="Login"
         title="User Login"
-        errorMessages={errors}
+        errorMessage={errors.general}
       />
     </div>
   );

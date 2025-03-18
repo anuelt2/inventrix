@@ -7,7 +7,7 @@ export const Form = ({
   buttonText = "Submit",
   title = "Form",
   initialValues = {},
-  errorMessages = {},
+  errorMessage = "",
 }) => {
   const [formData, setFormData] = useState(initialValues);
 
@@ -24,20 +24,27 @@ export const Form = ({
   };
 
   return (
-    <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 border-gray-600">
+    <div className="bg-white p-20 rounded-lg shadow-md w-130">
+      <h2 className="text-gray-900 text-2xl font-bl=old mb-4 text-center">{title}</h2>
+      {errorMessage && (
+        <p className="text-red-500 text-sm mt-1">
+          {errorMessage}
+        </p>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-4">
         {fields.map((field) => (
           <div key={field.name}>
-            <label className="block text-gray-700 font-semibold mb-1">
+            <label className="block text-gray-700 text-left font-semibold mb-1">
               {field.label}
             </label>
             {field.type === "select" ? (
+              <div className="relative w-full">
               <select
                 name={field.name}
                 value={formData[field.name] || ""}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                required
+                className="w-full p-2 border text-gray-700 appearance-none border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all" 
               >
                 {field.options.map((option) => (
                   <option key={option.id} id={option.id} value={option.value}>
@@ -45,12 +52,16 @@ export const Form = ({
                   </option>
                 ))}
               </select>
+              <svg className="absolute right-3 top-3 h-5 w-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"></path>
+              </svg>
+              </div>
             ) : field.type === "textarea" ? (
               <textarea
                 name={field.name}
                 value={formData[field.name] || ""}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all" 
                 rows="4"
               />
             ) : (
@@ -61,19 +72,15 @@ export const Form = ({
                 onChange={handleChange}
                 placeholder={field.placeholder}
                 autoComplete=""
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                required
+                className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all" 
               />
-            )}
-            {errorMessages[field.name] && (
-              <p className="text-red-500 text-sm mt-1">
-                {errorMessages[field.name]}
-              </p>
             )}
           </div>
         ))}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+          className="w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600"
         >
           {buttonText}
         </button>

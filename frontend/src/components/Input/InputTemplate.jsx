@@ -1,20 +1,20 @@
 import { useState } from "react";
 
 import Form from "../UI/InputForm";
+import API from "../../utils/api"
 
 
 const InputTemplate= ({ fields, endpoint, alertMsg, btnText, formTitle, initialValue }) => {
   const [errors, setErrors] = useState({});
  
   const handleSubmit = async (formData) => {
-    console.log("Submitting:", formData);
     try {
       await API.post(endpoint, formData);
       alert(alertMsg);
     } catch (error) {
-      setErrors({ error: error });
+      setErrors({ error: "Missing required form field(s)" });
+      console.log(error)
     }
-    console.log("Submittd", formData);
   };
 
   return (
@@ -25,9 +25,9 @@ const InputTemplate= ({ fields, endpoint, alertMsg, btnText, formTitle, initialV
         buttonText={btnText}
         title={formTitle}
         initialValues={initialValue}
-        errorMessages={errors} />
+        errorMessage={errors.error} />
     </div>
   );
 };
 
-export default InputTemplate
+export default InputTemplate;
