@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 //import Login from "./components/Auth/LoginForm";
-import Dashboard from "./components/Dashboard/DashboardLayout";
 import AddProduct from "./components/Input/AddProduct";
 import SearchBarDisplay from "./components/UI/SearchBar";
 import Dashboard from './components/Dashboard/DashboardLayout';
