@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 export const Form = ({
   fields,
   onSubmit,
@@ -26,7 +25,9 @@ export const Form = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center min-h-screen w-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-gray-900 text-2xl font-bl=old mb-4 text-center">{title}</h2>
+        <h2 className="text-gray-600 text-2xl font-bl=old mb-4 text-center">
+          {title}
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4 border-gray-600">
           {fields.map((field) => (
             <div key={field.name}>
