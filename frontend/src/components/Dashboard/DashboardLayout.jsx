@@ -1,4 +1,5 @@
 import Layout from '../Layout/Layout';
+import DataTableComponent from '../UI/DataTable';
 import OverviewSection from './OverviewSection';
 
 
@@ -13,6 +14,9 @@ const Dashboard = () => {
             totalSuppliers: 20
           }} />
       </div>
+      
+      {/* Data Table */}
+      <div><DataTableComponent /></div>
       </Layout>
     </div>
   );
