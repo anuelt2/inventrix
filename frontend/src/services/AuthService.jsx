@@ -6,6 +6,9 @@ const API_BASE_URL = "/auth";
 export const loginUser = async (credentials) => {
   try {
     const response = await API.post(`${API_BASE_URL}/login`, credentials);
+
+    localStorage.setItem("access_token", response.data.tokens.access);
+
     return response.data;
   } catch (error) {
     throw error.response?.data?.message || "Login failed. Try again";

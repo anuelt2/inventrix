@@ -23,10 +23,10 @@ const Login = () => {
   ];
 
   const handleSubmit = async (formData) => {
-    console.log("Submitting:", formData);
+    console.log("Submitting...");
     try {
       await login(formData);
-      // navigate("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
       setErrors({ general: error || "Invalid email or password" });
     }
