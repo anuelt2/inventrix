@@ -17,8 +17,10 @@ const Dashboard = () => {
         </div>
 
         {/* Data Table */}
-        <div className="bg-white shadow-lg rounded-lg p-4 mt-6 overflow-x-auto">
-          <SuppliersTable />
+        <div className="bg-white shadow-lg rounded-lg p-4 mt-6">
+          <div className="max-h-150 overflow-y-auto">
+            <SuppliersTable />
+          </div>
         </div>
       </Layout>
     </div>
