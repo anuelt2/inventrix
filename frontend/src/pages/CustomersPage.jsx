@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
-import SuppliersTable from "../components/Tables/SuppliersTable";
+import CustomersTable from "../components/Tables/CustomersTable";
 import Dashboard from "../components/Dashboard/DashboardLayout";
 
-const Suppliers = () => {
+const Customers = () => {
   const { accessToken } = useAuth();
   const navigate = useNavigate();
 
@@ -24,10 +24,10 @@ const Suppliers = () => {
   return (
     <Layout sideBar={true}>
       <Dashboard>
-        <SuppliersTable />
+        <CustomersTable />
       </Dashboard>
     </Layout>
   );
 };
 
-export default Suppliers;
+export default Customers;

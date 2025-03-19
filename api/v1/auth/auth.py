@@ -71,8 +71,10 @@ def login_user():
 
     users = storage.get_by_attr(User, email=data["email"])
 
-    if users:
-        user = users[0]
+    if not users:
+        return jsonify({"error": "Invalid email or password"}), 400
+
+    user = users[0]
 
     if user.check_password(password=data["password"]):
         role = user.role.value
@@ -91,6 +93,21 @@ def login_user():
                 ), 200
 
     return jsonify({"error": "Invalid email or password"}), 400
+
+
+@app_auth.route("/me", methods=["GET"])
+@jwt_required()
+def get_current_user():
+    """Fetch logged-in user details"""
+
+    print(request.headers.get("Authorization")) # Debugging
+    current_user_id = get_jwt_identity()
+    user = storage.get(User, current_user_id)
+
+    if not user:
+        abort(404, description="User not found")
+
+    return jsonify(serialize_user_role(user)), 200
 
 
 @app_auth.route("/logout", methods=['POST'])
