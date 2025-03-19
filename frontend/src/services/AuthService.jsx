@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import API from "../utils/api";
 
 const API_BASE_URL = "/auth";
