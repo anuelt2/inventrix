@@ -10,12 +10,12 @@ const Register = () => {
 
   const fields = [
     {
-      name: "firstName",
+      name: "first_name",
       type: "text",
       placeholder: "First Name",
     },
     {
-      name: "lastName",
+      name: "last_name",
       type: "text",
       placeholder: "Last Name",
     },
@@ -37,7 +37,7 @@ const Register = () => {
   ];
 
   const handleSubmit = async (formData) => {
-    console.log("Submitting:", formData);
+    console.log("Submitting:", JSON.stringify(formData, null, 2));
     try {
       await registerUser(formData);
       navigate("/login");
