@@ -1,52 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, Fragment } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 import Form from "../UI/InputForm";
-import API from "../../utils/api";
-
 
 const Login = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const fields = [
     {
       name: "email",
-      label: "Email",
       type: "email",
-      placeholder: "Enter your email"
+      placeholder: "Email",
     },
     {
       name: "password",
-      label: "Password",
       type: "password",
-      placeholder: "Enter your password"
+      placeholder: "Password",
     },
   ];
 
   const handleSubmit = async (formData) => {
     console.log("Submitting:", formData);
     try {
-      const response = await API.post("/auth/login", formData);
-      localStorage.setItem("access_token", response.data.tokens.access);
-      navigate("/dashboard");
+      await login(formData);
+      // navigate("/dashboard");
     } catch (error) {
-      console.log(error)
-      setErrors({ general: "Invalid email or password" });
-      console.log(errors)
+      setErrors({ general: error || "Invalid email or password" });
     }
   };
 
   return (
-    <div>
+    <Fragment>
       <Form
         fields={fields}
         onSubmit={handleSubmit}
         buttonText="Login"
-        title="User Login"
-        errorMessage={errors.general}
+        title="Login"
+        errorMessages={errors}
       />
-    </div>
+    </Fragment>
   );
 };
 

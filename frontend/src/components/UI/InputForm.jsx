@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 export const Form = ({
   fields,
   onSubmit,
