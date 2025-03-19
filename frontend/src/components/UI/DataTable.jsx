@@ -5,7 +5,9 @@ const DataTableComponent = ({ title, columns, data }) => {
   return (
     <div>
       <div>
-        <h2>{title}</h2>
+        <h2 className="text-2xl font-bold text-gray-600 mb-4 border-b-2 border-gray-300 pb-2">
+          {title}
+        </h2>
         <DataTable
           columns={columns}
           data={data}
