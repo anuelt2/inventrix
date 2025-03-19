@@ -6,8 +6,6 @@ import Register from "./components/Auth/RegisterForm";
 import AddProduct from "./components/Input/AddProduct";
 import SearchBarDisplay from "./components/UI/SearchBar";
 import Dashboard from "./components/Dashboard/DashboardLayout";
-// import Login from "./components/Auth/Login";
-// import Register from "./components/Auth/Register";
 import "./App.css";
 
 const App = () => {
