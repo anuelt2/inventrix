@@ -36,10 +36,12 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (credentials) => {
     try {
-      const { accessToken, refreshToken } = await loginUser(credentials);
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      setAccessToken(accessToken);
+      const response = await loginUser(credentials);
+      const { access, refresh } = response.tokens;
+
+      localStorage.setItem("accessToken", access);
+      localStorage.setItem("refreshToken", refresh);
+      setAccessToken(access);
 
       const userData = await fetchUserData();
       setUser(userData);
