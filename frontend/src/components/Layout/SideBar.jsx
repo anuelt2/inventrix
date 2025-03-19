@@ -1,30 +1,48 @@
 import { useState } from "react";
 import { Menu, X, LayoutDashboard, ScrollText, Package, CreditCard, Cable, Users, Settings } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const SideBar = () => {
+
+const SideBar = ({sideBar=false}) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  if (!sideBar) return null;
 
   return (
     <>
       {/* Mobile Toggle Button */}
       <button 
-        className="md:hidden fixed top-4 left-0 bg-gray-600 text-white p-2 rounded-md z-50"
+        className="fixed top-4 left-0 bg-gray-600 text-white p-2 rounded-md z-50"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Sidebar */}
-      <aside className={`fixed top-16 left-0 bg-gray-600 text-white w-44 h-screen p-5 space-y-6 transition-transform md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:block z-40 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500`}>
+      <aside className={`fixed top-16 left-0 bg-gray-600 text-white w-44 h-screen p-5 space-y-6 transition-transform ${isOpen ? "translate-x-0" : "-translate-x-full"} md:block z-40 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500`}>
         <nav>
           <ul className="space-y-4">
-            <NavItem Icon={LayoutDashboard} label="Dashboard" />
-            <NavItem Icon={ScrollText} label="Inventory" />
-            <NavItem Icon={Package} label="Products" />
-            <NavItem Icon={CreditCard} label="Transactions" />
-            <NavItem Icon={Cable} label="Suppliers" />
-            <NavItem Icon={Users} label="Users" />
-            <NavItem Icon={Settings} label="Settings" />
+            <Link to="/dashboard">
+              <NavItem Icon={LayoutDashboard} label="Dashboard" />
+            </Link>
+            <Link to="/inventory">
+              <NavItem Icon={ScrollText} label="Inventory" />
+            </Link>
+            <Link to="/products">
+              <NavItem Icon={Package} label="Products" />
+            </Link>
+            <Link to="/transactions">
+              <NavItem Icon={CreditCard} label="Transactions" />
+            </Link>
+            <Link to="/suppliers">
+              <NavItem Icon={Cable} label="Suppliers" />
+            </Link>
+            <Link to="/users">
+              <NavItem Icon={Users} label="Users" />
+            </Link>
+            <Link to="/settings">
+              <NavItem Icon={Settings} label="Settings" />
+            </Link>
           </ul>
         </nav>
       </aside>

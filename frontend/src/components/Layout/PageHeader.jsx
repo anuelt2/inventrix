@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom"
+
 
 export const Logo = () => {
   return (
@@ -8,6 +10,12 @@ export const Logo = () => {
   );
 };
 
+const capitalizeWords = (str) => {
+  return str.split(' ').map(
+    word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
+
+
 export const AuthButtons = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -15,21 +23,25 @@ export const AuthButtons = () => {
     <div className="flex space-x-4">
       {isLoggedIn ? (
         <>
-          <span className="text-white">Hello, User</span>
-          <button
-            onClick={() => setIsLoggedIn(false)}
-            className="text-white px-4 py-2 hover:text-gray-300"
+          <div>
+            <span className="text-white">Hello, {capitalizeWords("Username") || "User"}</span>
+            <button
+              onClick={() => setIsLoggedIn(false)}
+              className="text-white px-4 py-2 hover:text-gray-300"
           >
-            Logout
-          </button>
+              <Link to="/logout">Logout</Link>
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <button className="text-white px-4 py-2 hover:text-gray-300">
-            Login
+          <button
+            onClick={() => setIsLoggedIn(true)}
+            className="text-white px-4 py-2 hover:text-gray-300">
+            <Link to="/login">Login</Link>
           </button>
           <button className="text-white px-4 py-2 hover:text-gray-300">
-            Register
+            <Link to="/register">Register</Link>
           </button>
         </>
       )}

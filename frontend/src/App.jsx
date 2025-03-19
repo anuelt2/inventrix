@@ -1,11 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-// import Login from "./components/Auth/LoginForm";
-import AddProduct from "./components/Input/AddProduct";
+import RegistrationPage from "./pages/RegistrationPage";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import SearchBarDisplay from "./components/UI/SearchBar";
-import Dashboard from './components/Dashboard/DashboardLayout';
-import Login from "./components/Auth/Login";
-import Register from "./components/Auth/Register";
 import './App.css'
 
 
@@ -13,11 +12,10 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/add-product" element={<AddProduct />} />
+        <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="*" element={<NotFoundPage />} />
         <Route path="/search" element={<SearchBarDisplay
           endpoint={"/products"}
           placeholder={"Search for products..."}

@@ -56,7 +56,7 @@ const Register = () => {
 
   // Registration form
   return (
-    <div className="fixed inset-0 flex items-center justify-center min-h-screen w-screen bg-gray-100">
+    <div className="fixed inset-0 mt-20 flex items-center justify-center min-h-screen w-screen bg-gray-100">
       <div className="bg-white p-20 rounded-lg shadow-md w-130">
         <h2 className="text-gray-900 text-2xl font-bl=old mb-4 text-center">Register</h2>
         {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
