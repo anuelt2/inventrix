@@ -1,13 +1,13 @@
 import React, { useState, useContext } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 import Form from "../UI/InputForm";
-import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();
 
   const fields = [
     {
@@ -26,7 +26,7 @@ const Login = () => {
     console.log("Submitting:", formData);
     try {
       await login(formData);
-      navigate("/dashboard");
+      // navigate("/dashboard");
     } catch (error) {
       setErrors({ general: error || "Invalid email or password" });
     }

@@ -1,7 +1,12 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { loginUser, fetchUserData, logoutUser } from "../services/AuthService";
 
 export const AuthContext = createContext();
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -9,6 +14,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem("accessToken") || null
   );
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Fetch user details with access token
   useEffect(() => {
@@ -34,6 +40,11 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setAccessToken(accessToken);
+
+      const userData = await fetchUserData();
+      setUser(userData);
+
+      navigate("/dashboard");
     } catch (error) {
       setError(error);
     }
@@ -46,6 +57,7 @@ export const AuthProvider = ({ children }) => {
     setAccessToken(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    navigate("/login");
   };
 
   return (

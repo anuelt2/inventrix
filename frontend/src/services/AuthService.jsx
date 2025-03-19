@@ -15,7 +15,7 @@ export const loginUser = async (credentials) => {
 // Fetch user details
 export const fetchUserData = async () => {
   try {
-    const response = await API.get(`${API_BASE_URL}/token`);
+    const response = await API.get(`${API_BASE_URL}/me`);
     return response.data;
   } catch (error) {
     throw error.response?.data?.message || "Fetching user data failed";

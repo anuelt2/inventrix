@@ -1,8 +1,25 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../context/AuthContext";
 import Layout from "../Layout/Layout";
 import SuppliersTable from "../Tables/SuppliersTable";
 import OverviewSection from "./OverviewSection";
 
 const Dashboard = () => {
+  const { accessToken } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/login");
+    }
+  }, [accessToken, navigate]);
+
+  if (!accessToken) {
+    return <p>Redirecting...</p>;
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Layout>
