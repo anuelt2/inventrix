@@ -23,7 +23,6 @@ const Login = () => {
   ];
 
   const handleSubmit = async (formData) => {
-    console.log("Submitting...");
     try {
       await login(formData);
       navigate("/dashboard");
@@ -39,7 +38,7 @@ const Login = () => {
         onSubmit={handleSubmit}
         buttonText="Login"
         title="Login"
-        errorMessages={errors}
+        errorMessage={errors.general}
       />
     </Fragment>
   );

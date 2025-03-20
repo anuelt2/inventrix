@@ -5,7 +5,6 @@ import RegistrationPage from "./pages/RegistrationPage";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import SearchBarDisplay from "./components/UI/SearchBar";
 import AddProduct from "./components/Input/AddProduct";
 import Categories from "./pages/CategoriesPage";
 import Customers from "./pages/CustomersPage";
@@ -25,21 +24,12 @@ const App = () => {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/add-product" element={<AddProduct />} />
-          <Route path="/Categories" element={<Categories />} />
-          <Route path="/Customers" element={<Customers />} />
-          <Route path="/Products" element={<Products />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/suppliers" element={<Suppliers />} />
-          <Route path="/Transactions" element={<Transactions />} />
-          <Route path="/Users" element={<Users />} />
-          <Route
-            path="/search"
-            element={
-              <SearchBarDisplay
-                endpoint={"/products"}
-                placeholder={"Search for products..."}
-              />
-            }
-          />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/users" element={<Users />} />
         </Routes>
       </AuthProvider>
     </Router>

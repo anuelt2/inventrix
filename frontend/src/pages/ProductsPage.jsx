@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 import ProductsTable from "../components/Tables/ProductsTable";
-import Dashboard from "../components/Dashboard/DashboardLayout";
+import SearchBarDisplay from "../components/UI/SearchBar";
 
 const Products = () => {
   const { accessToken } = useAuth();
@@ -23,9 +23,13 @@ const Products = () => {
 
   return (
     <Layout sideBar={true}>
-      <Dashboard>
-        <ProductsTable />
-      </Dashboard>
+      <div className="flex justify-end w-full p-4 mt-10 mb-5 rounded-lg bg-gray-100">
+        <SearchBarDisplay
+          endpoint={"/products"}
+          placeholder={"Search for products..."}
+          className="w-1/3" />
+      </div>
+      <ProductsTable />
     </Layout>
   );
 };

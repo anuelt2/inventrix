@@ -35,21 +35,17 @@ export const AuthProvider = ({ children }) => {
 
   // Login function
   const login = async (credentials) => {
-    try {
-      const response = await loginUser(credentials);
-      const { access, refresh } = response.tokens;
+    const response = await loginUser(credentials);
+    const { access, refresh } = response.tokens;
 
-      localStorage.setItem("accessToken", access);
-      localStorage.setItem("refreshToken", refresh);
-      setAccessToken(access);
+    localStorage.setItem("accessToken", access);
+    localStorage.setItem("refreshToken", refresh);
+    setAccessToken(access);
 
-      const userData = await fetchUserData();
-      setUser(userData);
+    const userData = await fetchUserData();
+    setUser(userData);
 
-      navigate("/dashboard");
-    } catch (error) {
-      setError(error);
-    }
+    navigate("/dashboard");
   };
 
   // Logout function

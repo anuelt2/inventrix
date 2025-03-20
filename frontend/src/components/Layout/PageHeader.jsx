@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+
+import { useAuth } from "../../context/AuthContext";
 
 
 export const Logo = () => {
@@ -11,36 +12,39 @@ export const Logo = () => {
 };
 
 const capitalizeWords = (str) => {
-  return str.split(' ').map(
-    word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 };
 
 
 export const AuthButtons = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user, logout } = useAuth();
+
 
   return (
     <div className="flex space-x-4">
-      {isLoggedIn ? (
+      {user ? (
         <>
           <div>
-            <span className="text-white">Hello, {capitalizeWords("Username") || "User"}</span>
+            <span className="text-white">Hello, {capitalizeWords(user.username) || "User"}</span>
             <button
-              onClick={() => setIsLoggedIn(false)}
+              onClick={logout}
               className="text-white px-4 py-2 hover:text-gray-300"
-          >
-              <Link to="/logout">Logout</Link>
+            >
+              Logout
             </button>
           </div>
         </>
       ) : (
         <>
           <button
-            onClick={() => setIsLoggedIn(true)}
             className="text-white px-4 py-2 hover:text-gray-300">
             <Link to="/login">Login</Link>
           </button>
-          <button className="text-white px-4 py-2 hover:text-gray-300">
+          <button
+            className="text-white px-4 py-2 hover:text-gray-300">
             <Link to="/register">Register</Link>
           </button>
         </>

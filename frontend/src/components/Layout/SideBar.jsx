@@ -31,11 +31,17 @@ const SideBar = ({sideBar=false}) => {
             <Link to="/products">
               <NavItem Icon={Package} label="Products" />
             </Link>
+            <Link to="/categories">
+              <NavItem Icon={Package} label="Categories" />
+            </Link>
             <Link to="/transactions">
               <NavItem Icon={CreditCard} label="Transactions" />
             </Link>
             <Link to="/suppliers">
               <NavItem Icon={Cable} label="Suppliers" />
+            </Link>
+            <Link to="/customers">
+              <NavItem Icon={Cable} label="Customers" />
             </Link>
             <Link to="/users">
               <NavItem Icon={Users} label="Users" />
