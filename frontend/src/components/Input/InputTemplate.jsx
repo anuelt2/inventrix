@@ -1,19 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "../../context/AuthContext";
 import Form from "../UI/InputForm";
-import API from "../../utils/api"
+import API from "../../utils/api";
 
-
-const InputTemplate= ({ fields, endpoint, alertMsg, btnText, formTitle, initialValue }) => {
+const InputTemplate = ({
+  fields,
+  endpoint,
+  alertMsg,
+  btnText,
+  formTitle,
+  initialValue,
+}) => {
   const [errors, setErrors] = useState({});
- 
+  const { accessToken } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/login");
+    }
+  }, [accessToken, navigate]);
+
   const handleSubmit = async (formData) => {
+    if (!accessToken) {
+      return;
+    }
+
     try {
-      await API.post(endpoint, formData);
+      await API.post(endpoint, formData, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
       alert(alertMsg);
     } catch (error) {
-      setErrors({ error: "Missing required form field(s)" });
-      console.log(error)
+      setErrors({ error: "Missing required form field(s) or unauthorized" });
+      console.log(error);
     }
   };
 
@@ -25,7 +47,8 @@ const InputTemplate= ({ fields, endpoint, alertMsg, btnText, formTitle, initialV
         buttonText={btnText}
         title={formTitle}
         initialValues={initialValue}
-        errorMessage={errors.error} />
+        errorMessage={errors.error}
+      />
     </div>
   );
 };
