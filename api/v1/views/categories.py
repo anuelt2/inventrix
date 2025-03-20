@@ -8,9 +8,11 @@ from models.product import Product
 from models import storage
 from api.utils.paginate import paginate, get_paginate_args
 from api.utils.role_decorator import role_required
+from flask_jwt_extended import jwt_required
 
 
 @app_views.route('/categories', methods=['GET'])
+@jwt_required()
 def get_categories():
     """
     Retrieve all Category objects.
@@ -28,6 +30,7 @@ def get_categories():
 
 
 @app_views.route('/categories/<category_id>', methods=['GET'])
+@jwt_required()
 def get_category_by_id(category_id=None):
     """
     Retrieve a Category object linked to `category_id`
@@ -51,6 +54,7 @@ def get_category_by_id(category_id=None):
 
 
 @app_views.route('/categories/<category_id>/products', methods=['GET'])
+@jwt_required()
 def get_category_products(category_id=None):
     """
     Retrieve all Product objects of a Category object linked to `category_id`
@@ -78,6 +82,7 @@ def get_category_products(category_id=None):
 
 @app_views.route('/categories/<category_id>/products/<product_id>',
                  methods=['GET'])
+@jwt_required()
 def get_category_product(category_id=None, product_id=None):
     """
     Retrieve a Product object linked to `product_id` of a Category object
@@ -115,6 +120,7 @@ Category {category_id}"""
 
 
 @app_views.route('/categories', methods=['POST'])
+@jwt_required()
 @role_required(['admin', 'superuser'])
 def create_category():
     """
@@ -154,8 +160,8 @@ with id '{category_filter[0].id}'."
     return response
 
 
-# Protected
 @app_views.route('/categories/<category_id>', methods=['PUT'])
+@jwt_required()
 @role_required(['admin', 'superuser'])
 def update_category_by_id(category_id=None):
     """
@@ -197,9 +203,9 @@ def update_category_by_id(category_id=None):
     return response
 
 
-# Protected
 @app_views.route('/categories/<category_id>/products/<product_id>',
                  methods=['PUT'])
+@jwt_required()
 @role_required(['admin', 'superuser'])
 def link_product_to_category(category_id=None, product_id=None):
     """
@@ -246,8 +252,8 @@ Category {category_id}."
     return response
 
 
-# Protected
 @app_views.route('/categories/<category_id>', methods=['DELETE'])
+@jwt_required()
 @role_required(['admin', 'superuser'])
 def delete_category_by_id(category_id=None):
     """

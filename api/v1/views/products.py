@@ -8,9 +8,11 @@ from models.product import Product
 from models.category import Category
 from api.utils.paginate import paginate, get_paginate_args
 from api.utils.role_decorator import role_required
+from flask_jwt_extended import jwt_required
 
 
 @app_views.route('/products', methods=['GET'])
+@jwt_required()
 def get_products():
     """Retrieve the list of all products"""
     # Get query parameters (default to page 1, all items)
@@ -22,6 +24,7 @@ def get_products():
 
 
 @app_views.route('/products/<product_id>', methods=['GET'])
+@jwt_required()
 def get_product(product_id):
     """Retrieves a product"""
     product = storage.get(Product, product_id)

@@ -6,7 +6,10 @@ from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from api.v1.views import app_views
 from models import storage
 from models.user import User, UserRole
+from models.transaction import Transaction
 from api.utils.paginate import paginate, get_paginate_args
+from api.utils.serialize_user_role import serialize_user_role
+
 
 @app_views.route("/users", methods=["GET"])
 @jwt_required()
@@ -18,15 +21,15 @@ def get_users():
     if role not in ["superuser", "admin"]:
         return jsonify({"error": "Access denied"}), 403
 
-    paginate_args =get_paginate_args(User, **request.args)
+    paginate_args = get_paginate_args(User, **request.args)
     paginated_users = paginate(**paginate_args)
 
     paginated_users["data"] = [serialize_user_role(user)
                                for user in paginated_users["data"]]
 
     if role == "admin":
-        paginated_user["data"] = [user for user in paginated_users["data"]
-                                  if user["role"] == "staff"]
+        paginated_users["data"] = [user for user in paginated_users[
+            "data"] if user["role"] == "staff"]
 
     return jsonify(paginated_users), 200
 
@@ -78,10 +81,32 @@ def get_all_user_transactions(user_id):
             current_user_role not in ["superuser", "admin"]):
         return jsonify({"error": "Access denied"}), 403
 
-    transactions = user.transactions
+    paginate_args = get_paginate_args(Transaction, **request.args)
 
-    return (jsonify([transaction.to_dict() for transaction in transactions]),
-            200)
+    transactions_query = (storage.paginate_filter_data(
+        Transaction, "user_id", user_id))
+
+    paginate_args["total"] = transactions_query.count()
+
+    paginate_args["total_pages"] = ((paginate_args[
+        "total"] + paginate_args["limit"] - 1) // paginate_args["limit"])
+
+    model = paginate_args.get("type")
+
+    transactions = (transactions_query.offset((
+        paginate_args["page"] - 1) * paginate_args["limit"]).
+                    limit(paginate_args["limit"]).all())
+
+    transactions_data = [transaction.to_dict() for transaction in transactions]
+
+    return jsonify({
+        "page": paginate_args["page"],
+        "limit": paginate_args["limit"],
+        "total": paginate_args["total"],
+        "total_pages": paginate_args["total_pages"],
+        "type": model.__name__,
+        "data": transactions_data
+        }), 200
 
 
 @app_views.route("/users/<user_id>/update-profile", methods=["PUT"])
@@ -209,20 +234,3 @@ def delete_user(user_id):
     storage.save()
 
     return jsonify({}), 200
-
-
-def serialize_user_role(user):
-    """Converts User instance to dict and stringify `role` value"""
-
-    if user is None:
-        return {}
-
-    if isinstance(user, dict):
-        user_dict = user
-    else:
-        user_dict = user.to_dict()
-
-    if "role" in user_dict and  isinstance(user_dict["role"], UserRole):
-        user_dict["role"] = user_dict["role"].value
-
-    return user_dict

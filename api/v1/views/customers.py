@@ -6,10 +6,12 @@ from flask_jwt_extended import jwt_required, get_jwt
 from api.v1.views import app_views
 from models import storage
 from models.customer import Customer
+from models.transaction import Transaction
 from api.utils.paginate import paginate, get_paginate_args
 
 
 @app_views.route("/customers", methods=['GET'])
+@jwt_required()
 def get_customers():
     """Retrieves list of all Customer objects"""
 
@@ -20,6 +22,7 @@ def get_customers():
 
 
 @app_views.route("/customers/<customer_id>", methods=['GET'])
+@jwt_required()
 def get_customer(customer_id):
     """Retrieves a specific Customer"""
 
@@ -32,6 +35,7 @@ def get_customer(customer_id):
 
 
 @app_views.route("/customers/<customer_id>/transactions", methods=['GET'])
+@jwt_required()
 def get_all_customer_transactions(customer_id):
     """Retrieves a specific Customer transactions"""
 
@@ -40,12 +44,36 @@ def get_all_customer_transactions(customer_id):
     if not customer:
         abort(404)
 
-    transactions = customer.transactions
+    paginate_args = get_paginate_args(Transaction, **request.args)
 
-    return jsonify([transaction.to_dict() for transaction in transactions])
+    transactions_query = (storage.paginate_filter_data(
+        Transaction, "customer_id", customer_id))
+
+    paginate_args["total"] = transactions_query.count()
+
+    paginate_args["total_pages"] = ((paginate_args[
+        "total"] + paginate_args["limit"] - 1) // paginate_args["limit"])
+
+    model = paginate_args.get("type")
+
+    transactions = (transactions_query.offset((
+        paginate_args["page"] - 1) * paginate_args["limit"]).
+                    limit(paginate_args["limit"]).all())
+
+    transactions_data = [transaction.to_dict() for transaction in transactions]
+
+    return jsonify({
+        "page": paginate_args["page"],
+        "limit": paginate_args["limit"],
+        "total": paginate_args["total"],
+        "total_pages": paginate_args["total_pages"],
+        "type": model.__name__,
+        "data": transactions_data
+        }), 200
 
 
 @app_views.route("/customers", methods=['POST'])
+@jwt_required()
 def post_customer():
     """Creates a new Customer"""
 
@@ -61,6 +89,7 @@ def post_customer():
 
 
 @app_views.route("/customers/<customer_id>", methods=['PUT'])
+@jwt_required()
 def put_customer(customer_id):
     """Updates a Customer"""
 
