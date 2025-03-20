@@ -29,7 +29,7 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/suppliers" element={<Suppliers />} />
           <Route path="/transactions" element={<Transactions />} />
-          <Route path="/users" element={<Users />} />
+          <Route path="/Users" element={<Users />} />
         </Routes>
       </AuthProvider>
     </Router>
