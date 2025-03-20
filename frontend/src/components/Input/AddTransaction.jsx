@@ -102,10 +102,10 @@ const AddTransaction = () => {
       <div>
             <InputTemplate
                 fields={fields}
-                endpoint="/products"
-                alertMsg="Product added successfully!"
-                btnText="Add Product"
-                formTitle="Add New Product"
+                endpoint="/transaction"
+                alertMsg="Transaction added successfully!"
+                btnText="Add Transaction"
+                formTitle="Add Transaction"
                 initialValue={{}}
             />
       </div>
