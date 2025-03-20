@@ -23,7 +23,7 @@ const Suppliers = () => {
 
   return (
     <Layout sideBar={true}>
-      <div className="flex justify-end w-full p-4 mt-10 mb-5 rounded-lg bg-gray-100">
+      <div className="sticky top-9 left-0 right-0 z-100 flex justify-end w-full p-4 mt-10 mb-5 rounded-lg bg-gray-100">
         <SearchBarDisplay
           endpoint={"/suppliers"}
           placeholder={"Search for suppliers..."}

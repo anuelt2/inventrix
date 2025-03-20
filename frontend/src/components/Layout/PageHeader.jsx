@@ -55,7 +55,7 @@ export const AuthButtons = () => {
 
 const PageHeader = () => {
   return (
-    <header className="fixed top-0 left-0 w-full bg-gray-600 text-white shadow-md py-4 px-6 flex items-center justify-between z-50">
+    <header className="fixed top-0 left-0 w-full bg-gray-600 text-white shadow-md py-4 px-6 flex items-center justify-between z-150">
       <div className="container mx-auto ml-4 flex justify-between items-center">
         {/* Left: Logo */}
         <Logo />

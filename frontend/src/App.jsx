@@ -12,6 +12,7 @@ import Products from "./pages/ProductsPage";
 import Suppliers from "./pages/SuppliersPage";
 import Transactions from "./pages/TransactionsPage";
 import Users from "./pages/UsersPage";
+import AddTransaction from "./components/Input/AddTransaction"
 import "./App.css";
 
 const App = () => {
@@ -24,12 +25,13 @@ const App = () => {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/add-transaction" element={<AddTransaction />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/products" element={<Products />} />
           <Route path="/suppliers" element={<Suppliers />} />
           <Route path="/transactions" element={<Transactions />} />
-          <Route path="/Users" element={<Users />} />
+          <Route path="/users" element={<Users />} />
         </Routes>
       </AuthProvider>
     </Router>

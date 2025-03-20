@@ -44,7 +44,8 @@ export const Form = ({
                 onChange={handleChange}
                 required
                 className="w-full p-2 border text-gray-700 appearance-none border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all" 
-              >
+                >
+                <option>Select</option>
                 {field.options.map((option) => (
                   <option key={option.id} id={option.id} value={option.value}>
                     {option.label}

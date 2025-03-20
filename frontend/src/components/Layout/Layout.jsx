@@ -9,7 +9,7 @@ const Layout = ({ children, sideBar}) => {
     <div className="flex flex-col min-h-screen mb-0">
       <PageHeader />
       <SideBar sideBar={sideBar} /> 
-      <main className="flex-grow">
+      <main className="flex-grow mb-30">
         {children}
       </main>
       <Footer />
