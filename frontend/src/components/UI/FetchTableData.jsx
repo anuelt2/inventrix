@@ -10,6 +10,7 @@ const useFetchData = (endpoint) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    console.log("UseEffect triggered with endpoint:", endpoint);
     const fetchData = async () => {
       try {
         const response = await API.get(endpoint, {
