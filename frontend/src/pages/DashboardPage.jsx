@@ -27,7 +27,9 @@ const DashboardPage = () => {
             <h1 className="text-2xl text-gray-600 font-bold">
               Welcome back, {userData ? userData.first_name : "User"}!
             </h1>
-            <p className="text-gray-600">Role: {userData.role}</p>
+            <p className="text-gray-600 mt-3">
+              Role: {userData.role.toUpperCase()}
+            </p>
           </div>
         )}
         <Dashboard />

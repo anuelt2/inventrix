@@ -1,4 +1,5 @@
 import InputTemplate from "./InputTemplate";
+import Layout from "../Layout/Layout";
 
 const AddCategory = () => {
   const fields = [
@@ -17,16 +18,18 @@ const AddCategory = () => {
   ];
 
   return (
-    <div>
-      <InputTemplate
-        fields={fields}
-        endpoint="/categories"
-        alertMsg="Category added successfully!"
-        btnText="Add Category"
-        formTitle="Add New Category"
-        initialValue={{}}
-      />
-    </div>
+    <Layout sideBar={true}>
+      <div>
+        <InputTemplate
+          fields={fields}
+          endpoint="/categories"
+          alertMsg="Category added successfully!"
+          btnText="Add Category"
+          formTitle="Add New Category"
+          initialValue={{}}
+        />
+      </div>
+    </Layout>
   );
 };
 
