@@ -12,8 +12,12 @@ const DataTableComponent = ({
 }) => {
   const { page, limit } = paginationInfo;
 
+  // Columns to exclude from displayed table
+  const excludedColumns = ["__CLASS__", "ID"];
+
   const filteredColumns = columns.filter(
-    (col) => col.name && col.name.trim().toUpperCase() !== "__CLASS__"
+    (col) =>
+      col.name && !excludedColumns.includes(col.name.trim().toUpperCase())
   );
 
   const formattedColumns = [
@@ -55,6 +59,19 @@ const DataTableComponent = ({
     };
   });
 
+  const pageLimits = [10, 15, 20, 25, 30];
+  let availablePageLimits = pageLimits.filter((total) => total <= totalRows);
+
+  if (
+    availablePageLimits.length === 0 ||
+    availablePageLimits[availablePageLimits.length - 1] < totalRows
+  ) {
+    const nextPageLimit = pageLimits.find((totals) => totals > totalRows);
+    if (nextPageLimit) {
+      availablePageLimits.push(nextPageLimit);
+    }
+  }
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 mt-6 flex flex-col flex-grow w-full custom-table">
       <div className="sticky top-0 bg-white z-10 p-4 border-b">
@@ -74,6 +91,7 @@ const DataTableComponent = ({
             rowsPerPageText: "Rows per page:",
             rangeSeparatorText: "of",
           }}
+          paginationRowsPerPageOptions={availablePageLimits}
           onChangePage={onPageChange}
           onChangeRowsPerPage={onRowsPerPageChange}
           highlightOnHover
