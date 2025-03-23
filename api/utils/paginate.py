@@ -59,7 +59,8 @@ def paginate(**paginate_args):
     total = paginate_args.get('total')
     total_pages = paginate_args.get('total_pages')
 
-    if limit < 1 or limit > total:
+# Modify (remove or limit > total)
+    if limit < 1:
         message = f"Query parameter 'limit={limit}' is out of bounds. \
 limit must be from 1 to {total}"
         return abort(400, message)
