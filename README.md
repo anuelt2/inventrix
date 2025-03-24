@@ -97,16 +97,16 @@ npm install -g yarn
 
 8. Start the react app:
 
-```bash
-cd frontend/
-npm install -g vite
+    ```bash
+    cd frontend/
+    npm install -g vite
 
-#Install dependencies
-yarn install
+    #Install dependencies
+    yarn install
 
-#Run the server
-vite
-```
+    #Run the server
+    vite
+    ```
 
 The react app should be served on `http://localhost:5173/` by default
 
