@@ -107,6 +107,37 @@ def put_product(product_id):
     return make_response(jsonify(product.to_dict()), 200)
 
 
+@app_views.route('/products/reorder', methods=['GET'])
+@jwt_required()
+def get_reorder_products():
+    """Retrieves list of all reorder products"""
+    products = storage.all(Product).values()
+
+    paginate_args = get_paginate_args(Product, **request.args)
+
+    reorder_products = ([product for product in 
+                         products if product.reorder_alert()])
+    
+    paginate_args["total"] = len(reorder_products)
+
+    paginate_args["total_pages"] = ((paginate_args[
+        "total"] + paginate_args["limit"] - 1) // paginate_args["limit"])
+    
+    model = paginate_args.get("type")
+
+    reorder_products_data = ([product.to_dict() for product in 
+                              reorder_products])
+
+    return jsonify({
+        "page": paginate_args["page"],
+        "limit": paginate_args["limit"],
+        "total": paginate_args["total"],
+        "total_pages": paginate_args["total_pages"],
+        "type": model.__name__,
+        "data": reorder_products_data
+    }), 200
+
+
 def generate_sku(product, category_name):
     """Generate SKU for product"""
     category = category_name[:3].upper().replace(" ", "")
