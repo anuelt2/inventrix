@@ -23,8 +23,6 @@ const AddProduct = () => {
         setCategories(formattedCategories);
       } catch (error) {
         console.error("Error fetching categories:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -84,14 +82,14 @@ const AddProduct = () => {
 
     return (
       <div>
-            <InputTemplate
-                fields={fields}
-                endpoint="/products"
-                alertMsg="Product added successfully!"
-                btnText="Add Product"
-                formTitle="Add New Product"
-                initialValue={{}}
-            />
+        <InputTemplate
+          fields={fields}
+          endpoint="/products"
+          alertMsg="Product added successfully!"
+          btnText="Add Product"
+          formTitle="Add New Product"
+          initialValue={{}}
+        />
       </div>
     );
 }

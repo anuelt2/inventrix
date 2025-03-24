@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 export const Logo = () => {
   return (
     <div className="text-2xl font-bold text-white">
-      Inventrix
+      <Link to="/">Inventrix</Link>
     </div>
   );
 };
@@ -28,7 +28,9 @@ export const AuthButtons = () => {
       {user ? (
         <>
           <div>
-            <span className="text-white">Hello, {capitalizeWords(user.username) || "User"}</span>
+            <Link to="/dashboard">
+              <span className="text-white">Hello, {capitalizeWords(user.username) || "User"}</span>
+            </Link>
             <button
               onClick={logout}
               className="text-white px-4 py-2 hover:text-gray-300"
