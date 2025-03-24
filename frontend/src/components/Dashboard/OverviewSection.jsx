@@ -18,8 +18,8 @@ export const OverviewCard = ({ title, value, icon: Icon, color }) => {
 
 const OverviewSection = ({ data }) => {
     return (
-    <section className="flex-1 p-6 pt-16 overflow-auto">
-      <h1 className="text-2xl pb-20 text-gray-500 font-bold">Overview</h1>
+    <section className="flex-1 p-6 pt-10 overflow-auto">
+      <h1 className="text-2xl pb-10 text-gray-500 font-bold">Overview</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <OverviewCard
             title="Total Products"

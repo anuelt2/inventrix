@@ -39,7 +39,7 @@ const AddCategory = () => {
     <div className="p-6 text-gray-500">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-3 py-1 bg-gray-600 text-white rounded"
+        className="px-3 py-1 bg-gray-600 text-white rounded cursor-pointer"
       >
         Add Category
       </button>

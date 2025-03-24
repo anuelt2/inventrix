@@ -41,16 +41,14 @@ const InputTemplate = ({
   };
 
   return (
-    <div className="">
-      <Form
-        fields={fields}
-        onSubmit={onSubmit || handleSubmit}
-        buttonText={btnText}
-        title={formTitle}
-        initialValues={initialValue}
-        errorMessage={errors.error}
-      />
-    </div>
+    <Form
+      fields={fields}
+      onSubmit={onSubmit || handleSubmit}
+      buttonText={btnText}
+      title={formTitle}
+      initialValues={initialValue}
+      errorMessage={errors.error}
+    />
   );
 };
 

@@ -21,9 +21,9 @@ const DashboardPage = () => {
 
   return (
     <Layout sideBar={true}>
-      <div className="p-6 mt-16">
+      <div className="mt-15">
         {userData && (
-          <div className="mb-6">
+          <div className="mb-0">
             <h1 className="text-2xl text-gray-600 font-bold">
               Welcome back, {userData ? userData.first_name : "User"}!
             </h1>

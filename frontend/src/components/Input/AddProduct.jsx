@@ -98,7 +98,7 @@ const AddProduct = () => {
       <div className="p-6 text-gray-500">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-3 py-1 bg-gray-600 text-white rounded"
+          className="px-3 py-1 bg-gray-600 text-white rounded cursor-pointer"
         >
           Add Product
         </button>
@@ -108,7 +108,7 @@ const AddProduct = () => {
           isOpen={isModalOpen}
           onRequestClose={() => setIsModalOpen(false)}
           contentLabel="Add Product Form"
-          className="bg-white rounded-lg shadow-lg max-w-lg mx-auto mt-30 z-150"
+          className="bg-gray-300 p-0 rounded-lg shadow-lg max-w-lg mx-auto mt-30 z-150"
           overlayClassName="fixed inset-0 bg-opacity-50 flex justify-center items-center z-150"
         >
         <div className="max-h-[60vh] overflow-y-auto flex flex-col">

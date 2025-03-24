@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import OverviewSection from "./OverviewSection";
 import API from "../../utils/api";
+import MonthlySalesChart from "./SalesChart";
+import MonthlyPurchasesChart from "./PurchasesChart";
 
-const Dashboard = ({ children }) => {
+const Dashboard = () => {
   const { accessToken } = useAuth();
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const Dashboard = ({ children }) => {
     }
 
     const getTotalTransactions = async () => {
-      await API.get('/products', {
+      await API.get('/transactions', {
         headers: {
           "Authorization": `Bearer ${accessToken}`,
           "Content-Type": "application/json"
@@ -72,7 +74,18 @@ const Dashboard = ({ children }) => {
         />
       </div>
       {/* Data Table */}
-      <div className="w-full">{children}</div>
+      <div className="w-full mt-20">
+        <h2 className="text-gray-500">Monthly Sales</h2>
+        <MonthlySalesChart
+          allTransactions={113}
+        />
+      </div>
+      <div className="w-full mt-20">
+        <h2 className="text-gray-500">Monthly Purchases</h2>
+        <MonthlyPurchasesChart
+          allTransactions={113}
+        />
+      </div>
     </div>
   );
 };
