@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import DataTableComponent from "../UI/DataTable";
 import useFetchData from "../UI/FetchTableData";
 import useCreateColumns from "../UI/TableColumns";
+import LoadingWrapper from "../UI/LoadingWrapper";
 
 const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [loading, setLoading] = useState(true);
   const { data, totalRows, error } = useFetchData("/users", page, limit);
+
+  useEffect(() => {
+    if (data) {
+      setLoading(false);
+    }
+  }, [data]);
+
   const columns = useCreateColumns(data);
 
   if (error) return <p>{error}</p>;
@@ -23,15 +32,17 @@ const UsersTable = () => {
   };
 
   return (
-    <DataTableComponent
-      title="Users"
-      columns={columns}
-      data={data}
-      totalRows={totalRows}
-      onPageChange={handlePageChange}
-      onRowsPerPageChange={handleRowsPerPageChange}
-      paginationInfo={{ page, limit }}
-    />
+    <LoadingWrapper loading={loading}>
+      <DataTableComponent
+        title="Users"
+        columns={columns}
+        data={data}
+        totalRows={totalRows}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+        paginationInfo={{ page, limit }}
+        />
+    </LoadingWrapper>
   );
 };
 

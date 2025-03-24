@@ -12,6 +12,7 @@ const InputTemplate = ({
   btnText,
   formTitle,
   initialValue,
+  onSubmit = () => {},
 }) => {
   const [errors, setErrors] = useState({});
   const { accessToken } = useAuth();
@@ -40,10 +41,10 @@ const InputTemplate = ({
   };
 
   return (
-    <div className="p-6">
+    <div className="">
       <Form
         fields={fields}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit || handleSubmit}
         buttonText={btnText}
         title={formTitle}
         initialValues={initialValue}

@@ -11,6 +11,8 @@ import {
   Settings,
   ChevronDown,
   ChevronRight,
+  ChartColumnStacked,
+  HandPlatter,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -86,7 +88,7 @@ const SideBar = ({ sideBar = false }) => {
             )}
             {/* Categories Expandable */}
             <NavItem
-              Icon={Package}
+              Icon={ChartColumnStacked}
               label="Categories"
               onClick={() => toggleMenu("categories")}
               isExpandable
@@ -143,7 +145,7 @@ const SideBar = ({ sideBar = false }) => {
             )}
             {/* Customers Expandable */}
             <NavItem
-              Icon={Cable}
+              Icon={HandPlatter}
               label="Customers"
               onClick={() => toggleMenu("customers")}
               isExpandable={true}

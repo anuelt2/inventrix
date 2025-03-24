@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DataTableComponent from "../UI/DataTable";
 import useFetchData from "../UI/FetchTableData";
 import useCreateColumns from "../UI/TableColumns";
+import LoadingWrapper from "../UI/LoadingWrapper";
 
 const TransactionsTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [loading, setLoading] = useState(true);
   const { data, totalRows, error } = useFetchData("/transactions", page, limit);
+
+  useEffect(() => {
+    if (data) {
+      setLoading(false);
+    }
+  }, [data]);
+
   const columns = useCreateColumns(data);
 
   if (error) return <p>{error}</p>;
@@ -23,15 +32,17 @@ const TransactionsTable = () => {
   };
 
   return (
-    <DataTableComponent
-      title="Transactions"
-      columns={columns}
-      data={data}
-      totalRows={totalRows}
-      onPageChange={handlePageChange}
-      onRowsPerPageChange={handleRowsPerPageChange}
-      paginationInfo={{ page, limit }}
-    />
+    <LoadingWrapper loading={loading}>
+      <DataTableComponent
+        title="Transactions"
+        columns={columns}
+        data={data}
+        totalRows={totalRows}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+        paginationInfo={{ page, limit }}
+      />
+    </LoadingWrapper>
   );
 };
 

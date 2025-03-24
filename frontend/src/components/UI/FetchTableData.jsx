@@ -25,6 +25,7 @@ const useFetchData = (endpoint, page, limit) => {
         setTotalRows(response.data.total || 0);
       } catch (error) {
         setError(error.response?.data?.message || "Error fetching data");
+      } finally {
       }
     };
 

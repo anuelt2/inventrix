@@ -6,10 +6,10 @@ import Footer from './Footer';
 const Layout = ({ children, sideBar}) => {
   
   return (
-    <div className="flex flex-col min-h-screen mb-0">
+    <div className="flex flex-col min-h-screen mb-0 items-center">
       <PageHeader />
       <SideBar sideBar={sideBar} /> 
-      <main className="flex-grow mb-30">
+      <main className="flex-grow w-[100%] mb-30">
         {children}
       </main>
       <Footer />

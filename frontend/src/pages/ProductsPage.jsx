@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ProductsTable from "../components/Tables/ProductsTable";
 import SearchBarDisplay from "../components/UI/SearchBar";
+import AddProduct from "../components/Input/AddProduct";
 
 const Products = () => {
   const { accessToken } = useAuth();
@@ -24,6 +25,7 @@ const Products = () => {
   return (
     <Layout sideBar={true}>
       <div className="sticky top-9 left-0 right-0 z-100 flex justify-end w-full p-4 mt-10 mb-5 rounded-lg bg-gray-100">
+        <AddProduct />
         <SearchBarDisplay
           endpoint={"/products"}
           placeholder={"Search for products..."}

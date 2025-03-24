@@ -12,7 +12,7 @@ const LandingPage = () => {
     // Show sidebar if user is logged in
     <Layout sideBar={!!user}>
       <div
-        className="bg-gray-100 min-h-screen flex flex-col items-center justify-center text-center p-6 bg-cover bg-center"
+        className="bg-gray-100 min-h-screen mt-20 flex flex-col items-center justify-center text-center p-6 bg-cover bg-center"
         style={{ backgroundImage: `url(${coverImage})` }}
       >
         <section className="max-w-3xl">
