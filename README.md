@@ -151,7 +151,6 @@ To access the remaining resources:
 #### Resources and their endpoints
 
 - Categories
-    Attributes include
     1. GET `/api/v1/categories`: Returns a list of all categories.
     2. GET `/api/v1/categories/<category_id>`: Returns a category linked to `category_id`.
     3. POST `/api/v1/categories/`: Creates a new category. The request body must contain at least the name of the category e.g. `{"name": "category_name"}`.
