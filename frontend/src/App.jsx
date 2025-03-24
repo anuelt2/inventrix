@@ -11,7 +11,7 @@ import DashboardPage from "./pages/DashboardPage";
 
 // Imports for Input Forms
 import AddProduct from "./components/Input/AddProduct";
-import AddTransaction from "./components/Input/AddTransaction"
+import AddTransaction from "./components/Input/AddTransaction";
 import AddSupplier from "./components/Input/AddSupplier";
 import AddCategory from "./components/Input/AddCategory";
 import AddCustomer from "./components/Input/AddCustomer";
@@ -20,6 +20,7 @@ import AddCustomer from "./components/Input/AddCustomer";
 import Categories from "./pages/CategoriesPage";
 import Customers from "./pages/CustomersPage";
 import Products from "./pages/ProductsPage";
+import ReorderProducts from "./pages/ReorderProductsPage";
 import Suppliers from "./pages/SuppliersPage";
 import Transactions from "./pages/TransactionsPage";
 import Users from "./pages/UsersPage";
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="/categories" element={<Categories />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/reorder" element={<ReorderProducts />} />
           <Route path="/suppliers" element={<Suppliers />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/users" element={<Users />} />
