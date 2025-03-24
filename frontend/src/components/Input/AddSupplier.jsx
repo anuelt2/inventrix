@@ -1,4 +1,5 @@
 import InputTemplate from "./InputTemplate";
+import Layout from "../Layout/Layout";
 
 const AddSupplier = () => {
   const fields = [
@@ -36,16 +37,18 @@ const AddSupplier = () => {
   ];
 
   return (
-    <div>
-      <InputTemplate
-        fields={fields}
-        endpoint="/suppliers"
-        alertMsg="Supplier added successfully!"
-        btnText="Add Supplier"
-        formTitle="Add New Supplier"
-        initialValue={{}}
-      />
-    </div>
+    <Layout sideBar={true}>
+      <div>
+        <InputTemplate
+          fields={fields}
+          endpoint="/suppliers"
+          alertMsg="Supplier added successfully!"
+          btnText="Add Supplier"
+          formTitle="Add New Supplier"
+          initialValue={{}}
+        />
+      </div>
+    </Layout>
   );
 };
 

@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
 
-
 export const Logo = () => {
   return (
     <div className="text-2xl font-bold text-white">
@@ -13,15 +12,13 @@ export const Logo = () => {
 
 const capitalizeWords = (str) => {
   return str
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
-
 
 export const AuthButtons = () => {
   const { user, logout } = useAuth();
-
 
   return (
     <div className="flex space-x-4">
@@ -29,7 +26,9 @@ export const AuthButtons = () => {
         <>
           <div>
             <Link to="/dashboard">
-              <span className="text-white">Hello, {capitalizeWords(user.username) || "User"}</span>
+              <span className="text-white">
+                Hello, {capitalizeWords(user.username) || "User"}
+              </span>
             </Link>
             <button
               onClick={logout}
@@ -41,12 +40,10 @@ export const AuthButtons = () => {
         </>
       ) : (
         <>
-          <button
-            className="text-white px-4 py-2 hover:text-gray-300">
+          <button className="text-white px-4 py-2 hover:text-gray-300">
             <Link to="/login">Login</Link>
           </button>
-          <button
-            className="text-white px-4 py-2 hover:text-gray-300">
+          <button className="text-white px-4 py-2 hover:text-gray-300">
             <Link to="/register">Register</Link>
           </button>
         </>

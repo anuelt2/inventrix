@@ -24,3 +24,62 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+/* Data Table and Pagination Styling */
+
+.custom-table {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+.custom-table .rdt_Table {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+.custom-table .rdt_TableBody {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 450px;
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+.custom-table .rdt_Pagination {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0px -2px 5px rgba(0, 0 0, 0.1);
+  z-index: 10;
+  width: 100%;
+}
+
+.rdt_TableCol {
+  white-space: nowrap;
+}
+
+.rdt_TableRow {
+  min-height: 50px;
+}
+
+.custom-table .rdt_Table,
+.custom-table .rdt_TableBody,
+.custom-table .rdt_Pagination {
+  flex-grow: unset !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
+}
+
+/* For pagination dropdown text */
+.rdt_Pagination select {
+  color: black;
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+.rdt_Pagination option {
+  color: black !important;
+}

@@ -1,132 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal"
+
 import { fetchUserData } from "../../services/AuthService";
-//import InputTemplate from "./InputTemplate";
-
-/*
-const AddTransaction = () => {
-    
-   const fields = [
-  {
-    name: "transaction_type",
-    label: "Transaction Type",
-    type: "select",
-    options: [
-      { value: "purchase", label: "Purchase" },
-      { value: "sale", label: "Sale" }
-    ],
-  },
-  {
-    name: "user_id",
-    label: "User ID",
-    type: "text",
-    placeholder: "Enter user ID",
-  },
-  {
-    name: "supplier_id",
-    label: "Supplier ID",
-    type: "text",
-    placeholder: "Enter supplier ID (Required for purchases)",
-    conditional: { field: "transaction_type", value: "purchase" }, // Show only for purchases
-  },
-  {
-    name: "customer_id",
-    label: "Customer ID",
-    type: "text",
-    placeholder: "Enter customer ID (Required for sales)",
-    conditional: { field: "transaction_type", value: "sale" }, // Show only for sales
-  },
-  {
-    name: "total_amount",
-    label: "Total Amount ($)",
-    type: "number",
-    placeholder: "Enter total transaction amount",
-  },
-  {
-    name: "transaction_items",
-    label: "Transaction Items",
-    type: "array",
-    fields: [
-      {
-        name: "product_id",
-        label: "Product ID",
-        type: "text",
-        placeholder: "Enter product ID",
-      },
-      {
-        name: "quantity",
-        label: "Quantity",
-        type: "number",
-        placeholder: "Enter quantity",
-      },
-      {
-        name: "transaction_items",
-        label: "Transaction Items",
-        type: "list",
-        fields: [
-        {
-            name: "product_id",
-            label: "Product ID",
-            type: "text",
-            placeholder: "Enter product ID",
-        },
-        {
-            name: "quantity",
-            label: "Quantity",
-            type: "number",
-            placeholder: "Enter quantity",
-        },
-        {
-            name: "unit_price",
-            label: "Unit Price ($)",
-            type: "number",
-            placeholder: "Enter unit price",
-        },
-        {
-            name: "total",
-            label: "Total Price ($)",
-            type: "number",
-            placeholder: "Auto-calculated total",
-            readonly: true, // Calculated as quantity * unit_price
-        }
-        ]
-      },
-      {
-        name: "unit_price",
-        label: "Unit Price ($)",
-        type: "number",
-        placeholder: "Enter unit price",
-      }
-    ]
-  }
-];
-
-    return (
-      <div>
-        <InputTemplate
-            fields={fields}
-            endpoint="/transaction"
-            alertMsg="Transaction added successfully!"
-            btnText="Add Transaction"
-            formTitle="Add Transaction"
-            initialValue={{}}
-        />
-      </div>
-    );
-}
-*/
-
-// export default AddTransaction;
 
 
 
-
-Modal.setAppElement("#root"); // Required for accessibility
+Modal.setAppElement("#root");
 
 const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
   const [transaction, setTransaction] = useState({
     transaction_type: "sale",
-    user_id: fetchUserData().id,
+    user_id: "",
     supplier_id: "",
     customer_id: "",
     total_amount: 0,
@@ -139,6 +23,24 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
     const { name, value } = e.target;
     setTransaction({ ...transaction, [name]: value });
   };
+
+  useEffect(() => {
+  const fetchData = async () => {
+    if (isOpen) {  // Fetch data only when modal is open
+      try {
+        const userData = await fetchUserData();
+        setTransaction((prevTransaction) => ({
+          ...prevTransaction,
+          user_id: userData.id,
+        }));
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+  };
+
+  fetchData();
+}, [isOpen]);
 
   // Handle Adding a New Item
   const addItem = () => {
@@ -181,12 +83,13 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Transaction Form"
-      className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto mt-20"
-      overlayClassName="fixed inset-0 bg-opacity-50 flex justify-center items-center"
+      className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto mt-45 z-150"
+      overlayClassName="fixed inset-0 bg-opacity-50 flex justify-center items-center z-150"
     >
+      <div className="max-h-[60vh] overflow-y-auto p-4">
       <h2 className="text-xl font-bold text-gray-500 mb-4 z-200">Add Transaction</h2>
       
-      <form onSubmit={handleSubmit} className="space-y-4 z-200">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Transaction Type */}
         <div>
           <label className="block text-gray-700">Transaction Type</label>
@@ -210,6 +113,7 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
             value={transaction.user_id}
             onChange={handleChange}
             placeholder="Enter user ID"
+            readOnly
             className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all"
           />
         </div>
@@ -316,11 +220,10 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
           </button>
         </div>
       </form>
+      </div>
     </Modal>
   );
 };
-
-// export default TransactionForm;
 
 
 const AddTransaction = () => {
@@ -336,7 +239,7 @@ const AddTransaction = () => {
     <div className="p-6 text-gray-500">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-blue-600 text-white rounded"
+        className="px-3 py-1 bg-gray-600 text-white rounded"
       >
         Add Transaction
       </button>
@@ -345,7 +248,7 @@ const AddTransaction = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleFormSubmit}
-        className="bg-white p-6 rounded shadow-md z-200"
+        className="bg-white p-6 rounded shadow-md z-500"
       />
     </div>
   );

@@ -3,42 +3,35 @@ import { useState, useEffect, useContext } from "react";
 import API from "../../utils/api";
 import { AuthContext } from "../../context/AuthContext";
 
-const useFetchData = (endpoint) => {
+const useFetchData = (endpoint, page, limit) => {
   const { accessToken } = useContext(AuthContext);
   const [data, setData] = useState([]);
-  const [columns, setColumns] = useState([]);
   const [error, setError] = useState("");
+  const [totalRows, setTotalRows] = useState(0);
 
   useEffect(() => {
+    if (!page || !limit) return;
+
     const fetchData = async () => {
       try {
         const response = await API.get(endpoint, {
           headers: { Authorization: `Bearer ${accessToken}` },
+          params: { page, limit },
         });
 
         const apiData = response.data.data;
 
-        if (apiData.length > 0) {
-          const keys = Object.keys(apiData[0]);
-
-          const tableColumns = keys.map((key) => ({
-            name: key.toUpperCase(),
-            selector: (row) => row[key],
-            sortable: true,
-          }));
-          setColumns(tableColumns);
-        }
-
         setData(Array.isArray(apiData) ? apiData : []);
+        setTotalRows(response.data.total || 0);
       } catch (error) {
-        setError(error.response?.data?.message || "Error loading table");
+        setError(error.response?.data?.message || "Error fetching data");
       }
     };
 
     fetchData();
-  }, [endpoint]);
+  }, [endpoint, page, limit]);
 
-  return { data, columns, error };
+  return { data, totalRows, error };
 };
 
 export default useFetchData;
