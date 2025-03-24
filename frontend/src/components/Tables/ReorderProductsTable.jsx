@@ -4,11 +4,15 @@ import useFetchData from "../UI/FetchTableData";
 import useCreateColumns from "../UI/TableColumns";
 import LoadingWrapper from "../UI/LoadingWrapper";
 
-const ProductsTable = () => {
+const ReorderProductsTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
-  const { data, totalRows, error } = useFetchData("/products", page, limit);
+  const { data, totalRows, error } = useFetchData(
+    "/products/reorder",
+    page,
+    limit
+  );
 
   useEffect(() => {
     if (data) {
@@ -34,25 +38,16 @@ const ProductsTable = () => {
   return (
     <LoadingWrapper loading={loading}>
       <DataTableComponent
-        title="Products"
+        title={<span style={{ color: "red" }}>Reorder Products</span>}
         columns={columns}
         data={data}
         totalRows={totalRows}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowsPerPageChange}
         paginationInfo={{ page, limit }}
-        conditionalRowStyles={[
-          {
-            when: (row) => row.reorder_level >= row.stock_quantity,
-            style: {
-              backgroundColor: "#ffcccc",
-              fontWeight: "bold",
-            },
-          },
-        ]}
       />
     </LoadingWrapper>
   );
 };
 
-export default ProductsTable;
+export default ReorderProductsTable;

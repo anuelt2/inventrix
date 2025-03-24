@@ -1,6 +1,5 @@
 import React from "react";
-import { Box, Cable, ShoppingCart } from "lucide-react";
-
+import { Box, Cable, ShoppingCart, Truck } from "lucide-react";
 
 export const OverviewCard = ({ title, value, icon: Icon, color }) => {
   return (
@@ -17,28 +16,36 @@ export const OverviewCard = ({ title, value, icon: Icon, color }) => {
 };
 
 const OverviewSection = ({ data }) => {
-    return (
+  return (
     <section className="flex-1 p-6 pt-16 overflow-auto">
       <h1 className="text-2xl pb-20 text-gray-500 font-bold">Overview</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <OverviewCard
-            title="Total Products"
-            value={data.totalProducts}
-            icon={Box}
-            color="bg-blue-500"
-          />
-          <OverviewCard
-            title={`Total Sales (${new Date().toLocaleString("default", { month: "long" })})`}
-            value={data.totalSales}
-            icon={ShoppingCart}
-            color="bg-green-500"
-          />
-          <OverviewCard
-            title="Total Suppliers"
-            value={data.totalSuppliers}
-            icon={Cable}
-            color="bg-yellow-500"
-          />
+        <OverviewCard
+          title="Total Products"
+          value={data.totalProducts}
+          icon={Box}
+          color="bg-blue-500"
+        />
+        <OverviewCard
+          title="Total Products Need Restock"
+          value={data.totalReorderProducts}
+          icon={Truck}
+          color="bg-red-500"
+        />
+        <OverviewCard
+          title={`Total Transactions (${new Date().toLocaleString("default", {
+            month: "long",
+          })})`}
+          value={data.totalSales}
+          icon={ShoppingCart}
+          color="bg-green-500"
+        />
+        <OverviewCard
+          title="Total Suppliers"
+          value={data.totalSuppliers}
+          icon={Cable}
+          color="bg-yellow-500"
+        />
       </div>
     </section>
   );

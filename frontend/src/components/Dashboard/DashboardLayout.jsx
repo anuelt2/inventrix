@@ -10,51 +10,71 @@ const Dashboard = ({ children }) => {
   const navigate = useNavigate();
 
   const [totalProducts, setTotalProducts] = useState(0);
+  const [totalReorderProducts, setTotalReorderProducts] = useState(0);
   const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [totalTransactions, setTotalTransactions] = useState(0);
-  
+
   useEffect(() => {
     if (!accessToken) {
       navigate("/login");
     }
 
     const getTotalProducts = async () => {
-      await API.get('/products', {
+      await API.get("/products", {
         headers: {
-          "Authorization": `Bearer ${accessToken}`,
-          "Content-Type": "application/json"
-        }
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => setTotalProducts(response.data.total))
-      .catch(error => console.error(error))
-    }
-  
+        .then((response) => setTotalProducts(response.data.total))
+        .catch((error) => console.error(error));
+    };
+
+    const getTotalReorderProducts = async () => {
+      await API.get("/products/reorder", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => setTotalReorderProducts(response.data.total))
+        .catch((error) => console.error(error));
+    };
+
     const getTotalSuppliers = async () => {
-      await API.get('/suppliers', {
+      await API.get("/suppliers", {
         headers: {
-          "Authorization": `Bearer ${accessToken}`,
-          "Content-Type": "application/json"
-        }
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => setTotalSuppliers(response.data.total))
-      .catch(error => console.error(error))
-    }
+        .then((response) => setTotalSuppliers(response.data.total))
+        .catch((error) => console.error(error));
+    };
 
     const getTotalTransactions = async () => {
-      await API.get('/products', {
+      await API.get("/transactions", {
         headers: {
-          "Authorization": `Bearer ${accessToken}`,
-          "Content-Type": "application/json"
-        }
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => setTotalTransactions(response.data.total))
-      .catch(error => console.error(error))
-    }
-    
+        .then((response) => setTotalTransactions(response.data.total))
+        .catch((error) => console.error(error));
+    };
+
     getTotalProducts();
+    getTotalReorderProducts();
     getTotalSuppliers();
-    getTotalTransactions()
-  }, [accessToken, navigate, setTotalProducts, setTotalSuppliers, setTotalTransactions]);
+    getTotalTransactions();
+  }, [
+    accessToken,
+    navigate,
+    setTotalProducts,
+    setTotalReorderProducts,
+    setTotalSuppliers,
+    setTotalTransactions,
+  ]);
 
   if (!accessToken) {
     return <p>Redirecting...</p>;
@@ -66,6 +86,7 @@ const Dashboard = ({ children }) => {
         <OverviewSection
           data={{
             totalProducts: totalProducts,
+            totalReorderProducts: totalReorderProducts,
             totalSales: totalTransactions,
             totalSuppliers: totalSuppliers,
           }}
