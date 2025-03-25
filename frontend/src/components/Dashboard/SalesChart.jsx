@@ -39,7 +39,7 @@ const MonthlySalesChart = ({allTransactions}) => {
   }, []);
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={350}>
         <BarChart data={salesData}>
         {/* Add grid for better visibility */}
         <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
