@@ -25,14 +25,16 @@ const LandingPage = () => {
         }}
       >
         <div className="max-w-3xl mt-10">
-          <h1 className="text-6xl font-bold text-gray-900 mb-12">Inventrix</h1>
-          <h1 className="text-4xl font-bold text-gray-900 mt-10">
-            Manage Your Inventory Efficiently
-          </h1>
-          <p className="text-lg text-gray-900 mt-4">
-            Inventrix helps you track stock, manage transactions, and optimize
-            your business operations.
-          </p>
+          <h1 className="text-6xl font-bold text-gray-900 mb-10">Inventrix</h1>
+          <div className="bg-gray-200/25 p-6 mb-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+            <h1 className="text-4xl font-bold text-gray-900">
+              Manage Your Inventory Efficiently
+            </h1>
+            <p className="text-lg text-gray-900 mt-4">
+              Inventrix helps you track stock, manage transactions, and optimize
+              your business operations.
+            </p>
+          </div>
           {/* Link to dashboard if user is logged in or login page if not */}
           <Link to={user ? "/dashboard" : "/login"}>
             <button className="mt-6 bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
