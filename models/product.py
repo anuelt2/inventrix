@@ -29,3 +29,7 @@ class Product(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initializes products"""
         super().__init__(*args, **kwargs)
+    
+    def reorder_alert(self):
+        """Returns true if product quantity hits or goes below reorder level"""
+        return self.stock_quantity <= self.reorder_level

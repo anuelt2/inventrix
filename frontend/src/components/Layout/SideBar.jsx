@@ -18,29 +18,9 @@ import { Link } from "react-router-dom";
 
 const SideBar = ({ sideBar = false }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState({
-    products: false,
-    categories: false,
-    transactions: false,
-    suppliers: false,
-    customers: false,
-  });
+
 
   if (!sideBar) return null;
-
-  // Expandables Toggle menu
-  const toggleMenu = (menu) => {
-    setExpandedMenus((prev) => {
-      return {
-        products: false,
-        categories: false,
-        transactions: false,
-        suppliers: false,
-        customers: false,
-        [menu]: !prev[menu],
-      };
-    });
-  };
 
   return (
     <>
@@ -67,101 +47,21 @@ const SideBar = ({ sideBar = false }) => {
             <Link to="/dashboard">
               <NavItem Icon={ScrollText} label="Inventory" />
             </Link>
-            {/* Products Expandable */}
-            <NavItem
-              Icon={Package}
-              label="Products"
-              onClick={() => toggleMenu("products")}
-              isExpandable={true}
-              isOpen={expandedMenus.products}
-              hasSubmenu
-            />
-            {expandedMenus.products && (
-              <ul className="pl-6 space-y-2">
-                <Link to="/products">
-                  <SubMenuItem label="View Products" />
-                </Link>
-                <Link to="/add-product">
-                  <SubMenuItem label="Add Product" />
-                </Link>
-              </ul>
-            )}
-            {/* Categories Expandable */}
-            <NavItem
-              Icon={ChartColumnStacked}
-              label="Categories"
-              onClick={() => toggleMenu("categories")}
-              isExpandable
-              isOpen={expandedMenus.categories}
-              hasSubmenu
-            />
-            {expandedMenus.categories && (
-              <ul className="pl-6 space-y-2">
-                <Link to="/categories">
-                  <SubMenuItem label="View Categories" />
-                </Link>
-                <Link to="/add-category">
-                  <SubMenuItem label="Add Category" />
-                </Link>
-              </ul>
-            )}
-            {/* Transactions Expandable */}
-            <NavItem
-              Icon={CreditCard}
-              label="Transactions"
-              onClick={() => toggleMenu("transactions")}
-              isExpandable
-              isOpen={expandedMenus.transactions}
-              hasSubmenu
-            />
-            {expandedMenus.transactions && (
-              <ul className="pl-6 space-y-2">
-                <Link to="/transactions">
-                  <SubMenuItem label="View Transactions" />
-                </Link>
-                <Link to="/add-transaction">
-                  <SubMenuItem label="Add Transaction" />
-                </Link>
-              </ul>
-            )}
-            {/* Suppliers Expandable */}
-            <NavItem
-              Icon={Cable}
-              label="Suppliers"
-              onClick={() => toggleMenu("suppliers")}
-              isExpandable
-              isOpen={expandedMenus.suppliers}
-              hasSubmenu
-            />
-            {expandedMenus.suppliers && (
-              <ul className="pl-6 space-y-2">
-                <Link to="/suppliers">
-                  <SubMenuItem label="View Suppliers" />
-                </Link>
-                <Link to="/add-supplier">
-                  <SubMenuItem label="Add Supplier" />
-                </Link>
-              </ul>
-            )}
-            {/* Customers Expandable */}
-            <NavItem
-              Icon={HandPlatter}
-              label="Customers"
-              onClick={() => toggleMenu("customers")}
-              isExpandable={true}
-              isOpen={expandedMenus.customers}
-              hasSubmenu
-            />
-            {expandedMenus.customers && (
-              <ul className="pl-6 space-y-2">
-                <Link to="/customers">
-                  <SubMenuItem label="View Customers" />
-                </Link>
-                <Link to="/add-customer">
-                  <SubMenuItem label="Add Customer" />
-                </Link>
-              </ul>
-            )}
+            <Link to="/products">
+              <NavItem Icon={Package} label="Products" />
+            </Link>  
+            <Link to="/categories">
+              <NavItem Icon={ChartColumnStacked} label="Categories" />
+            </Link>
+            <Link to="/transactions">
+              <NavItem Icon={CreditCard} label="Transactions" />
+            </Link>
+            <Link to="/suppliers">
+             <NavItem Icon={Cable} label="Suppliers" />
+            </Link>
+            <Link to="/customers">
+              <NavItem Icon={HandPlatter} label="Customers" />
+            </Link>      
             <Link to="/users">
               <NavItem Icon={Users} label="Users" />
             </Link>
@@ -191,11 +91,5 @@ const NavItem = ({ Icon, label, onClick, isExpandable, isOpen }) => (
   </li>
 );
 
-// Subnemu Item
-const SubMenuItem = ({ label }) => (
-  <li className="p-2 text-sm rounded-md text-gray-300 hover:bg-gray-500 hover:text-white cursor-pointer">
-    {label}
-  </li>
-);
 
 export default SideBar;

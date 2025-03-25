@@ -9,6 +9,7 @@ const DataTableComponent = ({
   onPageChange,
   onRowsPerPageChange,
   paginationInfo,
+  conditionalRowStyles,
 }) => {
   const { page, limit } = paginationInfo;
 
@@ -98,6 +99,7 @@ const DataTableComponent = ({
           responsive
           noHeader
           className="w-full min-w-full"
+          conditionalRowStyles={conditionalRowStyles}
         />
       </div>
     </div>

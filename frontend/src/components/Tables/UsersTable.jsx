@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTableComponent from "../UI/DataTable";
 import useFetchData from "../UI/FetchTableData";
 import useCreateColumns from "../UI/TableColumns";

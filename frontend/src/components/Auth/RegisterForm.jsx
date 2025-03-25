@@ -47,7 +47,8 @@ const Register = () => {
   };
 
   return (
-    <Fragment>
+    <div className="bg-white p-20 mt-20 mb-20 rounded-lg shadow-md w-130">
+    
       <Form
         fields={fields}
         onSubmit={handleSubmit}
@@ -55,7 +56,7 @@ const Register = () => {
         title="Register"
         errorMessages={errors}
       />
-    </Fragment>
+    </div>
   );
 };
 

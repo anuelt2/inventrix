@@ -65,10 +65,10 @@ const AddSupplier = () => {
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         contentLabel="Add Supplier Form"
-        className="bg-white rounded-lg shadow-lg max-w-lg mx-auto mt-30 z-150"
+        className="bg-gray-200 p-6 rounded-lg shadow-lg max-w-lg mx-auto mt-30 z-150"
         overlayClassName="fixed inset-0 bg-opacity-50 flex justify-center items-center z-150"
       >
-        <div className="max-h-[60vh] overflow-y-auto flex flex-col">
+        <div className="max-h-[55vh] overflow-y-auto rounded-lg bg-white p-10 flex flex-col">
           <InputTemplate
             fields={fields}
             onSubmit={handleFormSubmit}
@@ -76,7 +76,7 @@ const AddSupplier = () => {
             formTitle="Add New Supplier"
             initialValue={{}}
           />
-          <div className="flex justify-end">
+          <div className="flex justify-end p-3">
             <button
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 bg-gray-400 text-white rounded"

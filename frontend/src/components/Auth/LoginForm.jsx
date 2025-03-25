@@ -39,7 +39,7 @@ const Login = () => {
   };
 
   return (
-    <Fragment>
+    <div className="bg-white p-20 mt-20 mb-20 rounded-lg shadow-md w-130">
       <Form
         fields={fields}
         onSubmit={handleSubmit}
@@ -47,7 +47,7 @@ const Login = () => {
         title="Login"
         errorMessage={errors.general}
       />
-    </Fragment>
+    </div>
   );
 };
 

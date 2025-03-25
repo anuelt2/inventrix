@@ -23,7 +23,7 @@ export const Form = ({
   };
 
   return (
-    <div className="bg-white p-20 mt-20 mb-20 rounded-lg shadow-md w-130">
+    <>
       <h2 className="text-gray-900 text-2xl font-bl=old mb-4 text-center">
         {title}
       </h2>
@@ -94,7 +94,7 @@ export const Form = ({
           {buttonText}
         </button>
       </form>
-    </div>
+    </>
   );
 };
 

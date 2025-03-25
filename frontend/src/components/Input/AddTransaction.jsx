@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal"
-import { ThreeDots } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "../../context/AuthContext";
 import { fetchUserData } from "../../services/AuthService";
-
+import API from "../../utils/api"
 
 
 Modal.setAppElement("#root");
@@ -17,6 +18,7 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
     total_amount: 0,
     transaction_items: [],
   });
+  const [products, setProducts] = useState([]);
 
 
   // Handle Input Changes
@@ -41,6 +43,27 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
   };
 
   fetchData();
+  }, [isOpen]);
+  
+  useEffect(() => {
+  let isMounted = true; // Flag to prevent state update if unmounted
+
+  const fetchProducts = async () => {
+    if (isOpen) {  
+      try {
+        const response = await API.get("/products");
+        if (isMounted) setProducts(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    }
+  };
+
+  fetchProducts();
+
+  return () => {
+    isMounted = false; // Cleanup to prevent updates if component unmounts
+  };
 }, [isOpen]);
 
   // Handle Adding a New Item
@@ -84,10 +107,10 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Transaction Form"
-      className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto mt-45 z-150"
+      className="bg-gray-200 p-6 rounded-lg shadow-lg max-w-lg mx-auto mt-30 z-150"
       overlayClassName="fixed inset-0 bg-opacity-50 flex justify-center items-center z-150"
     >
-      <div className="max-h-[60vh] overflow-y-auto p-4">
+      <div className="max-h-[55vh] overflow-y-auto p-10 rounded-lg bg-white">
       <h2 className="text-xl font-bold text-gray-500 mb-4 z-200">Add Transaction</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -154,14 +177,43 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
           <label className="block text-gray-700">Transaction Items</label>
           {transaction.transaction_items.map((item, index) => (
             <div key={index} className="border p-2 mb-2 rounded">
-              <label className="block text-gray-700">Product ID</label>
-              <input
-                type="text"
-                placeholder="Product ID"
-                value={item.product_id}
-                onChange={(e) => updateItem(index, "product_id", e.target.value)}
-                className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all"
-              />
+              <label className="block text-gray-700">Product Name</label>
+              {/* {if product} */}
+              <div className="relative w-full">
+                <select
+                  name="product_id"
+                  placeholder="Product Name"
+                  value={item.product_id}
+                  onChange={(e) => {
+                    const selectedProduct = products.find(
+                      (product) => product.id === e.target.value
+                    );
+                    updateItem(index, "product_id", e.target.value);
+                    updateItem(index, "unit_price", selectedProduct ? selectedProduct.price : 0); // Update unit price
+                  }}
+                  className="w-full p-2 border text-gray-700 appearance-none border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all"
+                >
+                  <option value="">Select a Product</option>
+                    {products?.map((product) => (
+                    <option key={product.id} value={product.id}>
+                    {product.name}
+                  </option>
+                  ))}
+                </select>
+                <svg
+                  className="absolute right-3 top-3 h-5 w-5 text-gray-400 pointer-events-none"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
               <label className="block text-gray-700">Quantity</label>
               <input
                 type="number"
@@ -175,6 +227,7 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
                 type="number"
                 placeholder="Unit Price ($)"
                 value={item.unit_price}
+                readOnly
                 onChange={(e) => updateItem(index, "unit_price", Number(e.target.value))}
                 className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all"
               />
@@ -229,11 +282,30 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
 
 const AddTransaction = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errors, setErrors] = useState({});
+  const { accessToken } = useAuth();
+  const navigate = useNavigate();
 
-  // Handle form submission
-  const handleFormSubmit = (formData) => {
-    console.log("Transaction Data Submitted:", formData);
-    // Send data to API here...
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/login");
+    }
+  }, [accessToken, navigate]);
+
+  const handleSubmit = async (formData) => {
+    if (!accessToken) {
+      return;
+    }
+
+    try {
+      await API.post("/transactions", formData, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      alert("Transaction added successfully");
+    } catch (error) {
+      setErrors({ error: "Missing required form field(s) or unauthorized" });
+      console.log(error);
+    }
   };
 
   return (
@@ -248,7 +320,7 @@ const AddTransaction = () => {
       <TransactionForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={handleFormSubmit}
+        onSubmit={handleSubmit}
         className="bg-white p-6 rounded shadow-md z-500"
       />
     </div>
