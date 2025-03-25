@@ -22,6 +22,11 @@ export const AuthProvider = ({ children }) => {
       if (accessToken) {
         try {
           const userData = await fetchUserData();
+
+          if (!userData) {
+            throw new Error("Session expired");
+          }
+
           setUser(userData);
         } catch (error) {
           setError(error);
