@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import coverImage4 from "../assets/images/coverImage4.webp";
 import productsView from "../assets/images/productsView.webp";
 import feature from "../assets/images/feature.webp";
+import reorderView from "../assets/images/reorderView.webp";
 
 const LandingPage = () => {
   const { user } = useAuth();
@@ -67,7 +68,7 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Feature 2 - Supplier Management */}
+          {/* Feature 2 - Sales & Purchase Management */}
           <div className="bg-white p-6 shadow-md rounded-lg text-center">
             <img
               src={feature}
@@ -83,10 +84,10 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Feature 3 - Data Insights */}
+          {/* Feature 3 - Real-Time Stock Tracking */}
           <div className="bg-white p-6 shadow-md rounded-lg text-center">
             <img
-              src={feature}
+              src={reorderView}
               alt="Data Insights"
               className="w-full h-48 object-cover rounded-lg"
             />
