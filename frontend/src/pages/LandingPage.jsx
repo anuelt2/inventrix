@@ -234,7 +234,7 @@ const LandingPage = () => {
           </div>
           <div className="mt-12">
             <a
-              href=""
+              href="https://github.com/anuelt2/inventrix"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700"
