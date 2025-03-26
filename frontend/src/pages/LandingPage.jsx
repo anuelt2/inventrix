@@ -6,7 +6,7 @@ import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
 import coverImage4 from "../assets/images/coverImage4.webp";
 import productsView from "../assets/images/productsView.webp";
-import feature from "../assets/images/feature.webp";
+import addTransactionView from "../assets/images/addTransactionView.webp";
 import reorderView from "../assets/images/reorderView.webp";
 
 const LandingPage = () => {
@@ -71,7 +71,7 @@ const LandingPage = () => {
           {/* Feature 2 - Sales & Purchase Management */}
           <div className="bg-white p-6 shadow-md rounded-lg text-center">
             <img
-              src={feature}
+              src={addTransactionView}
               alt="Supplier Management"
               className="w-full h-48 object-cover rounded-lg"
             />
