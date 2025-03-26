@@ -51,7 +51,9 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
   const fetchProducts = async () => {
     if (isOpen) {  
       try {
-        const response = await API.get("/products");
+        const resp = await API.get("/stats");
+        const total = resp.data.products;
+        const response = await API.get(`/products?limit=${total}`);
         if (isMounted) setProducts(response.data.data || []);
       } catch (error) {
         console.error("Error fetching products", error);

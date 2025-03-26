@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [totalReorderProducts, setTotalReorderProducts] = useState(0);
   const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [totalTransactions, setTotalTransactions] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!accessToken) {
@@ -55,16 +56,21 @@ const Dashboard = () => {
     };
 
     const getTotalTransactions = async () => {
-      await API.get("/transactions", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => setTotalTransactions(response.data.total))
-        .catch((error) => console.error(error));
+      try {
+        const response = await API.get("/transactions", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setTotalTransactions(response.data.total);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
-
+  
     getTotalProducts();
     getTotalReorderProducts();
     getTotalSuppliers();
@@ -82,6 +88,10 @@ const Dashboard = () => {
     return <p>Redirecting...</p>;
   }
 
+  if (loading) {
+  return <p>Loading...</p>;
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-1 w-full">
@@ -97,13 +107,13 @@ const Dashboard = () => {
       <div className="w-full mt-20">
         <h2 className="text-gray-500">Monthly Sales</h2>
         <MonthlySalesChart
-          allTransactions={113}
+          allTransactions={totalTransactions}
         />
       </div>
       <div className="w-full mt-20">
         <h2 className="text-gray-500">Monthly Purchases</h2>
         <MonthlyPurchasesChart
-          allTransactions={113}
+          allTransactions={totalTransactions}
         />
       </div>
     </div>

@@ -13,7 +13,9 @@ const AddProduct = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await API.get("/categories");
+        const resp = await API.get("/stats");
+        const total = resp.data.products; 
+        const response = await API.get(`/categories?limit=${total}`);
         const categoryData = response.data?.data || response.data;
 
         // Transform API response to match the required format
@@ -70,7 +72,7 @@ const AddProduct = () => {
       placeholder: "Enter reorder level"
     },
     {
-      name: "category",
+      name: "category_id",
       label: "Category",
       type: "select",
       options: categories
