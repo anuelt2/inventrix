@@ -51,9 +51,8 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
   const fetchProducts = async () => {
     if (isOpen) {  
       try {
-        const resp = await API.get("/stats");
-        const total = resp.data.products;
-        const response = await API.get(`/products?limit=${total}`);
+        const limit = (await API.get("/stats")).data.products
+        const response = await API.get(`/products?limit=${limit}`);
         if (isMounted) setProducts(response.data.data || []);
       } catch (error) {
         console.error("Error fetching products", error);
@@ -97,9 +96,12 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
     setTransaction({ ...transaction, transaction_items: items });
   };
 
+
   // Handle Form Submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (transaction.transaction_type == "sale") delete transaction.supplier_id;
+    if (transaction.transaction_type == "purchase") delete transaction.customer_id;
     onSubmit(transaction);
     onClose(); // Close the modal after submission
   };
@@ -220,6 +222,7 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
               <input
                 type="number"
                 placeholder="Quantity"
+                min={0}
                 value={item.quantity}
                 onChange={(e) => updateItem(index, "quantity", Number(e.target.value))}
                 className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all"
@@ -237,7 +240,7 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
               <input
                 type="number"
                 placeholder="Total Price ($)"
-                value={item.total}
+                value={item.total.toFixed(2)}
                 readOnly
                 className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all"
               />
@@ -305,8 +308,8 @@ const AddTransaction = () => {
       });
       alert("Transaction added successfully");
     } catch (error) {
-      setErrors({ error: "Missing required form field(s) or unauthorized" });
-      console.log(error);
+      setErrors({ error: error.message });
+      console.log(errors);
     }
   };
 

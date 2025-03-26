@@ -13,12 +13,12 @@ import {
   ChevronRight,
   ChartColumnStacked,
   HandPlatter,
+  Truck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const SideBar = ({ sideBar = false }) => {
   const [isOpen, setIsOpen] = useState(false);
-
 
   if (!sideBar) return null;
 
@@ -49,7 +49,7 @@ const SideBar = ({ sideBar = false }) => {
             </Link>
             <Link to="/products">
               <NavItem Icon={Package} label="Products" />
-            </Link>  
+            </Link>
             <Link to="/categories">
               <NavItem Icon={ChartColumnStacked} label="Categories" />
             </Link>
@@ -57,13 +57,17 @@ const SideBar = ({ sideBar = false }) => {
               <NavItem Icon={CreditCard} label="Transactions" />
             </Link>
             <Link to="/suppliers">
-             <NavItem Icon={Cable} label="Suppliers" />
+              <NavItem Icon={Cable} label="Suppliers" />
             </Link>
             <Link to="/customers">
               <NavItem Icon={HandPlatter} label="Customers" />
-            </Link>      
+            </Link>
             <Link to="/users">
               <NavItem Icon={Users} label="Users" />
+            </Link>
+            {/* Link to reorder products. Red for reorder alert */}
+            <Link to="/products/reorder">
+              <NavItem Icon={Truck} label="Reorder" />
             </Link>
             {/* Link to settings. Temporarily set to Dashboard */}
             <Link to="/dashboard">
@@ -90,6 +94,5 @@ const NavItem = ({ Icon, label, onClick, isExpandable, isOpen }) => (
       (isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />)}
   </li>
 );
-
 
 export default SideBar;
