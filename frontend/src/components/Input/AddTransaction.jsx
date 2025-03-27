@@ -19,6 +19,7 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
     transaction_items: [],
   });
   const [products, setProducts] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
 
   // Handle Input Changes
@@ -51,7 +52,7 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
   const fetchProducts = async () => {
     if (isOpen) {  
       try {
-        const limit = (await API.get("/stats")).data.products
+        const limit = (await API.get("/stats")).data.products;
         const response = await API.get(`/products?limit=${limit}`);
         if (isMounted) setProducts(response.data.data || []);
       } catch (error) {
@@ -60,7 +61,20 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
     }
   };
 
+  const fetchSuppliers = async () => {
+    if (isOpen) {
+      try {
+        const total = (await API.get("/stats")).data.products;
+        const resp = await API.get(`/suppliers?limit=${total}`)
+        if (isMounted) setSuppliers(resp.data.data || [])
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    }
+  };
+
   fetchProducts();
+  fetchSuppliers();
 
   return () => {
     isMounted = false; // Cleanup to prevent updates if component unmounts
@@ -102,9 +116,20 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
     e.preventDefault();
     if (transaction.transaction_type == "sale") delete transaction.supplier_id;
     if (transaction.transaction_type == "purchase") delete transaction.customer_id;
-    onSubmit(transaction);
+    onSubmit(transaction, resetForm);
     onClose(); // Close the modal after submission
   };
+
+  const resetForm = () => {
+  setTransaction({
+    transaction_type: "sale",
+    user_id: "",
+    supplier_id: "",
+    customer_id: "",
+    total_amount: 0,
+    transaction_items: [],
+  });
+};
 
   return (
     <Modal
@@ -147,17 +172,38 @@ const TransactionForm = ({ isOpen, onClose, onSubmit }) => {
         </div>
 
         {/* Supplier ID (Only for Purchases) */}
-        {transaction.transaction_type === "purchase" && (
+          {transaction.transaction_type === "purchase" && (
           <div>
-            <label className="block text-gray-700">Supplier ID</label>
-            <input
-              type="text"
+           <label className="block text-gray-700">Supplier ID</label>
+          <div className="relative w-full">
+            <select
               name="supplier_id"
               value={transaction.supplier_id}
               onChange={handleChange}
-              placeholder="Enter supplier ID"
-              className="w-full p-2 border text-gray-700 border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all"
-            />
+              required
+              className="w-full p-2 border text-gray-700 appearance-none border-gray-400 rounded focus:outline-none focus:ring-gray-500 placeholder-gray-400 transition-all"
+            >
+              <option>Select a supplier...</option>
+              {suppliers?.map((supplier) => (
+                <option key={supplier.id} id={supplier.id} value={supplier.id}>
+                  {supplier.name || supplier.email || supplier.phone}
+                </option>
+              ))}
+            </select>
+            <svg
+              className="absolute right-3 top-3 h-5 w-5 text-gray-400 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 9l-7 7-7-7"
+            ></path>
+            </svg>
+            </div>
           </div>
         )}
 
@@ -297,7 +343,7 @@ const AddTransaction = () => {
     }
   }, [accessToken, navigate]);
 
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async (formData, resetForm) => {
     if (!accessToken) {
       return;
     }
@@ -307,6 +353,8 @@ const AddTransaction = () => {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       alert("Transaction added successfully");
+      resetForm(); // Reset the form state after success
+      setIsModalOpen(false); // Close modal on success
     } catch (error) {
       setErrors({ error: error.message });
       console.log(errors);

@@ -79,8 +79,6 @@ def post_transact():
         abort(400, "Missing transaction_type")
     if 'user_id' not in data:
         abort(400, "Missing user_id")
-    if not data.get("customer_id") and not data.get("supplier_id"):
-        abort(400, "Missing customer_id or supplier_id")
     if 'transaction_items' not in data:
         abort(400, "Missing transaction_item(s)")
     if not isinstance(data['transaction_items'], list):
@@ -94,21 +92,31 @@ def post_transact():
     transaction_items = data['transaction_items']
     del data['transaction_items']
 
+    # Enusure customer or supplier is valid
+    if data['transaction_type'] == 'sale':
+        if data['customer_id']:
+            a_valid_customer = storage.get(Customer, data['customer_id'])
+
+            if not not a_valid_cutomer:
+                new_customer = Customer()
+                new_customer.save()
+                data['customer_id'] = new_customer.id
+        else:
+            new_customer = Customer()
+            new_customer.save()
+            data['customer_id'] = new_customer.id
+    else:
+        if data['supplier_id']:
+            a_valid_supplier = storage.get(Supplier, data['supplier_id'])
+
+            if not a_valid_supplier:
+                abort(404)
+
     # Validate transaction by transaction type
     try:
         transaction = Transaction(**data)
     except Exception as e:
         return make_response(jsonify({"error": str(e)})), 409
-
-    # Enusure customer or supplier is valid
-    if transaction.transaction_type == 'sale':
-        a_valid_customer = storage.get(Customer, transaction.customer_id)
-        if not a_valid_customer:
-            abort(404)
-    else:
-        a_valid_supplier = storage.get(Supplier, transaction.supplier_id)
-        if not a_valid_supplier:
-            abort(404)
 
     transaction_item_objs = []
     total_amount = 0
