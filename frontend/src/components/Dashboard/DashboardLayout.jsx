@@ -3,38 +3,93 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
 import OverviewSection from "./OverviewSection";
-import axios from "axios";
+import API from "../../utils/api";
+import MonthlySalesChart from "./SalesChart";
+import MonthlyPurchasesChart from "./PurchasesChart";
 
-const Dashboard = ({ children }) => {
+const Dashboard = () => {
   const { accessToken } = useAuth();
   const navigate = useNavigate();
 
   const [totalProducts, setTotalProducts] = useState(0);
+  const [totalReorderProducts, setTotalReorderProducts] = useState(0);
   const [totalSuppliers, setTotalSuppliers] = useState(0);
-  
-  const getTotalProducts = async () => {
-    await axios.get('http://localhost:5000/api/v1/products')
-    .then(response => setTotalProducts(response.data.total))
-    .catch(error => console.error(error))
-  }
-
-  const getTotalSuppliers = async () => {
-    await axios.get('http://localhost:5000/api/v1/suppliers')
-    .then(response => setTotalSuppliers(response.data.total))
-    .catch(error => console.error(error))
-  }
+  const [totalTransactions, setTotalTransactions] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!accessToken) {
       navigate("/login");
     }
 
+    const getTotalProducts = async () => {
+      await API.get("/products", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => setTotalProducts(response.data.total))
+        .catch((error) => console.error(error));
+    };
+
+    const getTotalReorderProducts = async () => {
+      await API.get("/products/reorder", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => setTotalReorderProducts(response.data.total))
+        .catch((error) => console.error(error));
+    };
+
+    const getTotalSuppliers = async () => {
+      await API.get("/suppliers", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => setTotalSuppliers(response.data.total))
+        .catch((error) => console.error(error));
+    };
+
+    const getTotalTransactions = async () => {
+      try {
+        const response = await API.get("/transactions", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setTotalTransactions(response.data.total);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
     getTotalProducts();
+    getTotalReorderProducts();
     getTotalSuppliers();
-  }, [accessToken, navigate, setTotalProducts, setTotalSuppliers]);
+    getTotalTransactions();
+  }, [
+    accessToken,
+    navigate,
+    setTotalProducts,
+    setTotalReorderProducts,
+    setTotalSuppliers,
+    setTotalTransactions,
+  ]);
 
   if (!accessToken) {
     return <p>Redirecting...</p>;
+  }
+
+  if (loading) {
+  return <p>Loading...</p>;
   }
 
   return (
@@ -43,13 +98,24 @@ const Dashboard = ({ children }) => {
         <OverviewSection
           data={{
             totalProducts: totalProducts,
-            totalSales: 5000,
+            totalReorderProducts: totalReorderProducts,
+            totalSales: totalTransactions,
             totalSuppliers: totalSuppliers,
           }}
         />
       </div>
-      {/* Data Table */}
-      <div className="w-full">{children}</div>
+      <div className="w-full mt-20">
+        <h2 className="text-gray-500">Monthly Sales</h2>
+        <MonthlySalesChart
+          allTransactions={totalTransactions}
+        />
+      </div>
+      <div className="w-full mt-20">
+        <h2 className="text-gray-500">Monthly Purchases</h2>
+        <MonthlyPurchasesChart
+          allTransactions={totalTransactions}
+        />
+      </div>
     </div>
   );
 };

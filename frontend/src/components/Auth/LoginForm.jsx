@@ -1,4 +1,4 @@
-import React, { useState, useContext, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +7,14 @@ import Form from "../UI/InputForm";
 const Login = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { user, login } = useAuth();
+
+  // Redirect user to dashboard if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const fields = [
     {
@@ -23,7 +30,6 @@ const Login = () => {
   ];
 
   const handleSubmit = async (formData) => {
-    console.log("Submitting...");
     try {
       await login(formData);
       navigate("/dashboard");
@@ -33,15 +39,15 @@ const Login = () => {
   };
 
   return (
-    <Fragment>
+    <div className="bg-white p-20 mt-20 mb-20 rounded-lg shadow-md w-130">
       <Form
         fields={fields}
         onSubmit={handleSubmit}
         buttonText="Login"
         title="Login"
-        errorMessages={errors}
+        errorMessage={errors.general}
       />
-    </Fragment>
+    </div>
   );
 };
 

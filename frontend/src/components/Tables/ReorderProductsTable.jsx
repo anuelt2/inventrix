@@ -4,12 +4,16 @@ import useFetchData from "../UI/FetchTableData";
 import useCreateColumns from "../UI/TableColumns";
 import LoadingWrapper from "../UI/LoadingWrapper";
 
-const CategoriesTable = () => {
+const ReorderProductsTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
-  const { data, totalRows, error } = useFetchData("/categories", page, limit);
-  
+  const { data, totalRows, error } = useFetchData(
+    "/products/reorder",
+    page,
+    limit
+  );
+
   useEffect(() => {
     if (data) {
       setLoading(false);
@@ -25,7 +29,7 @@ const CategoriesTable = () => {
     setPage(newPage);
   };
 
-  // Update state whrn user changes rows per page
+  // Update state when user changes rows per page
   const handleRowsPerPageChange = (newLimit) => {
     setLimit(newLimit);
     setPage(1);
@@ -34,7 +38,7 @@ const CategoriesTable = () => {
   return (
     <LoadingWrapper loading={loading}>
       <DataTableComponent
-        title="Categories"
+        title={<span style={{ color: "red" }}>Reorder Products</span>}
         columns={columns}
         data={data}
         totalRows={totalRows}
@@ -46,4 +50,4 @@ const CategoriesTable = () => {
   );
 };
 
-export default CategoriesTable;
+export default ReorderProductsTable;

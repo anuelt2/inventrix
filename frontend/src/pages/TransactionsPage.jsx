@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 import TransactionsTable from "../components/Tables/TransactionsTable";
-import Dashboard from "../components/Dashboard/DashboardLayout";
+import SearchBarDisplay from "../components/UI/SearchBar";
+import AddTransaction from "../components/Input/AddTransaction";
 
 const Transactions = () => {
   const { accessToken } = useAuth();
@@ -23,9 +24,14 @@ const Transactions = () => {
 
   return (
     <Layout sideBar={true}>
-      <Dashboard>
-        <TransactionsTable />
-      </Dashboard>
+      <div className="sticky top-9 left-0 right-0 z-100 flex justify-end w-full p-4 mt-10 mb-5 rounded-lg bg-gray-100">
+        <AddTransaction />
+        <SearchBarDisplay
+          endpoint={"/transactions"}
+          placeholder={"Search for transactions..."}
+          className="w-1/3" />
+      </div>
+      <TransactionsTable />
     </Layout>
   );
 };
