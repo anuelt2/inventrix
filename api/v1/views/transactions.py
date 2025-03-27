@@ -97,7 +97,7 @@ def post_transact():
         if data['customer_id']:
             a_valid_customer = storage.get(Customer, data['customer_id'])
 
-            if not not a_valid_cutomer:
+            if not not a_valid_customer:
                 new_customer = Customer()
                 new_customer.save()
                 data['customer_id'] = new_customer.id
