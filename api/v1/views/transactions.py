@@ -94,10 +94,11 @@ def post_transact():
 
     # Enusure customer or supplier is valid
     if data['transaction_type'] == 'sale':
-        if data['customer_id']:
-            a_valid_customer = storage.get(Customer, data['customer_id'])
+        customer_id = data.get('customer_id')
+        if customer_id:
+            a_valid_customer = storage.get(Customer, customer_id)
 
-            if not not a_valid_customer:
+            if not a_valid_customer:
                 new_customer = Customer()
                 new_customer.save()
                 data['customer_id'] = new_customer.id
@@ -106,15 +107,17 @@ def post_transact():
             new_customer.save()
             data['customer_id'] = new_customer.id
     else:
-        if data['supplier_id']:
-            a_valid_supplier = storage.get(Supplier, data['supplier_id'])
+        supplier_id = data.get('supplier_id')
+        if supplier_id:
+            a_valid_supplier = storage.get(Supplier, supplier_id)
 
             if not a_valid_supplier:
-                abort(404)
+                abort(404, "Supplier not found")
 
     # Validate transaction by transaction type
     try:
         transaction = Transaction(**data)
+        transaction.save()
     except Exception as e:
         return make_response(jsonify({"error": str(e)})), 409
 
@@ -124,7 +127,7 @@ def post_transact():
     # Process transaction items
     items = transaction_items
     if not items:
-        abort(400, "Transaction must contain at least an item")
+        abort(400, "Transaction must contain at least one item")
 
     for item in items:
         item = dict(item)
@@ -150,9 +153,20 @@ def post_transact():
         if not product:
             abort(404, f"Product with id {product_id} not found")
 
+        # Update stock quantity based on transaction type
+        if data['transaction_type'] == 'sale':
+            if product.stock_quantity < quantity:
+                abort(400, f"Insufficient stock for product {product_id}")
+            product.stock_quantity -= quantity
+        elif data['transaction_type'] == 'purchase':
+            product.stock_quantity += quantity
+        
+        product.save()
+
         # Create transaction item object
         transaction_item = TransactionItem(**item)
         transaction_item.transaction_id = transaction.id
+        transaction_item.save()
         transaction_item_objs.append(transaction_item)
         total_amount += total
 
@@ -161,8 +175,8 @@ def post_transact():
     transaction.save()
 
     # Save all transaction items
-    for transaction_item in transaction_item_objs:
-        transaction_item.save()
+    #for transaction_item in transaction_item_objs:
+    #    transaction_item.save()
 
     # Retrieve and format response
     transaction = storage.get(Transaction, transaction.id)
