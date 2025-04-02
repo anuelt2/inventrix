@@ -6,11 +6,11 @@ The aim of this project was to build an inventory management system for small bu
 
 ## Project Landing Page
 
-[Inventrix] (https://inventrix.netlify.app)
+[Inventrix](https://inventrix.netlify.app)
 
 ## Project Blog Post
 
-[Project Blog Post] (https://medium.com/@anuelt/building-inventrix-a-simple-and-efficient-inventory-management-system-for-small-businesses-b7420d0071df)
+[Project Blog Post](https://medium.com/@anuelt/building-inventrix-a-simple-and-efficient-inventory-management-system-for-small-businesses-b7420d0071df)
 
 ## Contributors
 
