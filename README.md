@@ -4,6 +4,14 @@ The aim of this project was to build an inventory management system for small bu
 
 ---
 
+## Project Landing Page
+
+[Inventrix] (https://inventrix.netlify.app)
+
+## Project Blog Post
+
+[Project Blog Post] (https://medium.com/@anuelt/building-inventrix-a-simple-and-efficient-inventory-management-system-for-small-businesses-b7420d0071df)
+
 ## Contributors
 
 - Abdul-Mumin Awinaba: [X](https://x.com/awinaba37449)/[Github](https://github.com/awinabaab?tab=repositories)/[LinkedIn](https://www.linkedin.com/in/abdul-mumin-awinaba-664683311/)
