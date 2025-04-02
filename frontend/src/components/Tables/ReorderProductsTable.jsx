@@ -3,6 +3,7 @@ import DataTableComponent from "../UI/DataTable";
 import useFetchData from "../UI/FetchTableData";
 import useCreateColumns from "../UI/TableColumns";
 import LoadingWrapper from "../UI/LoadingWrapper";
+import { useAuth } from "../../context/AuthContext";
 
 const ReorderProductsTable = () => {
   const [page, setPage] = useState(1);
@@ -13,12 +14,13 @@ const ReorderProductsTable = () => {
     page,
     limit
   );
+  const { accessToken } = useAuth();
 
   useEffect(() => {
-    if (data) {
+    if (data && accessToken) {
       setLoading(false);
     }
-  }, [data]);
+  }, [data, accessToken]);
 
   const columns = useCreateColumns(data);
 

@@ -31,6 +31,10 @@ export const logoutUser = async () => {
     await API.post(`${API_BASE_URL}/logout`);
   } catch (error) {
     throw error.response?.data?.message || "Logout failed. Try again";
+  } finally {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    delete API.defaults.headers.common["Authorization"];
   }
 };
 

@@ -1,6 +1,9 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+
 import { loginUser, fetchUserData, logoutUser } from "../services/AuthService";
+import API from "../utils/api";
 
 export const AuthContext = createContext();
 
@@ -15,11 +18,12 @@ export const AuthProvider = ({ children }) => {
   );
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation(); // Get current path
 
   // Fetch user details with access token
   useEffect(() => {
     const getUser = async () => {
-      if (accessToken) {
+      if (accessToken && location.pathname !== "/login") {
         try {
           const userData = await fetchUserData();
 
@@ -29,38 +33,57 @@ export const AuthProvider = ({ children }) => {
 
           setUser(userData);
         } catch (error) {
-          setError(error);
+          setError(error.message || "An unexpected error occurred");
           logout();
         }
       }
     };
 
-    getUser();
-  }, [accessToken]);
+    if (accessToken) {
+      getUser();
+    }
+  }, [accessToken, location.pathname]);
+
+  useEffect(() => {
+    if (user && location.pathname === "/login") {
+      navigate("/dashboard");
+    }
+  }, [user, location.pathname, navigate]);
 
   // Login function
   const login = async (credentials) => {
-    const response = await loginUser(credentials);
-    const { access, refresh } = response.tokens;
+    try {
+      const response = await loginUser(credentials);
+      const { access, refresh } = response.tokens;
 
-    localStorage.setItem("accessToken", access);
-    localStorage.setItem("refreshToken", refresh);
-    setAccessToken(access);
+      localStorage.setItem("accessToken", access);
+      localStorage.setItem("refreshToken", refresh);
+      setAccessToken(access);
+      API.defaults.headers.common["Authorization"] = `Bearer ${access}`;
 
-    const userData = await fetchUserData();
-    setUser(userData);
-
-    navigate("/dashboard");
+      const userData = await fetchUserData();
+      setUser(userData);
+    } catch (error) {
+      setError(error.message || "Login failed. Try again");
+    }
   };
 
   // Logout function
-  const logout = () => {
-    logoutUser();
-    setUser(null);
-    setAccessToken(null);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    navigate("/login");
+  const logout = async () => {
+    const cancelTokenSource = axios.CancelToken.source();
+    try {
+      await logoutUser();
+    } catch (error) {
+      setError(error.message || "Logout failed. Try again");
+    } finally {
+      setUser(null);
+      setAccessToken(null);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      cancelTokenSource.cancel("Logging out, request cancelled");
+      delete API.defaults.headers.common["Authorization"];
+      navigate("/login");
+    }
   };
 
   return (

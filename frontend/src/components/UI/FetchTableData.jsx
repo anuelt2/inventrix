@@ -1,16 +1,16 @@
 import { useState, useEffect, useContext } from "react";
 
 import API from "../../utils/api";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 const useFetchData = (endpoint, page, limit) => {
-  const { accessToken } = useContext(AuthContext);
+  const { accessToken } = useAuth();
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [totalRows, setTotalRows] = useState(0);
 
   useEffect(() => {
-    if (!page || !limit) return;
+    if (!accessToken || !page || !limit) return;
 
     const fetchData = async () => {
       try {

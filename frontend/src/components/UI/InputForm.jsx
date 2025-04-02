@@ -9,6 +9,7 @@ export const Form = ({
   errorMessage = "",
 }) => {
   const [formData, setFormData] = useState(initialValues);
+  const [errors, setErrors] = useState({});
 
   // Handle input change
   const handleChange = (e) => {
@@ -25,11 +26,13 @@ export const Form = ({
 
   return (
     <>
-      <h2 className="text-gray-900 text-2xl font-bl=old mb-4 text-center">
-        {title}
-      </h2>
+      <h2 className="text-gray-900 text-2xl mb-4 text-center">{title}</h2>
       {errorMessage && (
-        <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+        <p className="text-red-500 text-sm mt-1">
+          {typeof errorMessage === "string"
+            ? errorMessage
+            : "An error occurred"}
+        </p>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
         {fields.map((field) => (
